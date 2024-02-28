@@ -63,3 +63,6 @@ we have 2 database table and 2 excel file, one excel workbook has two sheets. So
   	pkg_exec_status		varchar(100)	not null
   )
   ```
+  <br> now store SSIS loading status in newly created table
+  <br> -> drag 'Execute SQL Task' in 'Control Flow' double click on it -> insert SQL Command ```sql insert into ssis_log values(?, getdate(), ?, 'success')``` -> in 'Parameter Mapping' use 'System::PackageName' for first '?' -> now in 'Data Flow', create a variable called 'row_cnt' -> drag 'Row Count', double click on it and select the 'row_cnt' variable -> now in 'Control Flow', double click on newly created 'Execute SQL Task' and in 'Parameter Mapping' use 'User::row_cnt' for second '?'
+  <br> -> set this ‘Execute SQL Task’ for other packages also
