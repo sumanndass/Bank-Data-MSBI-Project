@@ -35,31 +35,31 @@ Create SSIS project using ‘Integration Service Project’ in DevEnv
 open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named account_db, transaction_db, branch_doc, staff_doc, product_doc
 
-**Remember**
-Data Flow - ETL Activities
-Control Flow - Non-ETL Activities
+	**Remember**
+  <br> Data Flow - ETL Activities
+	<br> Control Flow - Non-ETL Activities
 
 - Data Loading from Database
--> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
--> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
+<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
+<br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
--> ‘Start’ the project
+<br> -> ‘Start’ the project
 
 - Data Loading from Excel
--> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
--> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
+<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
+<br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
--> ‘Start’ the project
+<br> -> ‘Start’ the project
 
 - SSIS Logging (To know about the status of the successful loadings)
-  create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
-   ```sql
-   create table ssis_log
-(
-	id					int				primary key identity(1, 1),
-	pkg_name			varchar(100)	not null,
-	pkg_exec_time		datetime		not null,
-	row_cnt				int				not null,
-	pkg_exec_status		varchar(100)	not null
-)
-   ```
+  <br> create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
+  ```sql
+  create table ssis_log
+  (
+  	id			int		primary key identity(1, 1),
+  	pkg_name		varchar(100)	not null,
+  	pkg_exec_time		datetime	not null,
+  	row_cnt			int		not null,
+  	pkg_exec_status		varchar(100)	not null
+  )
+  ```
