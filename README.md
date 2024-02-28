@@ -3,7 +3,7 @@
 - [Overview](#overview)
 - [Tools Used](#tools-used)
 - [Database Creation](#database-creation)
-- [SSIS (SQL Server Integration Service)](#ssis-(sql-server-integration-service))
+- [SSIS (SQL Server Integration Service)](#ssis-sql-server-integration-service)
 
 ### Overview
 - This is a daily bank operation project.
