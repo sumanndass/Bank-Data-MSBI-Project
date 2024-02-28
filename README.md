@@ -66,3 +66,10 @@ we have 2 database table and 2 excel file, one excel workbook has two sheets. So
   <br> now store SSIS loading status in newly created table
   <br> -> drag 'Execute SQL Task' in 'Control Flow' double click on it -> insert SQL Command ```sql insert into ssis_log values(?, getdate(), ?, 'success')``` -> in 'Parameter Mapping' use 'System::PackageName' for first '?' -> now in 'Data Flow', create a variable called 'row_cnt' -> drag 'Row Count', double click on it and select the 'row_cnt' variable -> now in 'Control Flow', double click on newly created 'Execute SQL Task' and in 'Parameter Mapping' use 'User::row_cnt' for second '?'
   <br> -> set this ‘Execute SQL Task’ for other packages also
+
+- SSIS Failure Logging (To know about the failure happened in loading)
+  <br> -> double click on desired package -> go to ‘Extension’ -> ‘SSIS’ -> ‘Logging’
+-> choose all containers -> add ‘SSIS log provider for SQL Server’, tick the same and choose the destination server -> go to ‘Details’ and tick ‘OnError’ and ‘OnTaskFailed’
+  <br> -> Find the error logs in system tables in the selected database by using command ```sql select * from sysssislog```
+  <br> -> again, choose all containers -> add ‘SSIS log provider for Windows Event Log’, tick the same -> go to ‘Details’ and tick ‘OnError’ and ‘OnTaskFailed’
+  <br> -> Find the error logs in Windows Event Viewer -> Windows Logs -> Application
