@@ -29,10 +29,10 @@
   ```
 ### SSIS (SQL Server Integration Service)
 - Create SSIS Project
-Create SSIS project using ‘Integration Service Project’ in DevEnv
+<br> Create SSIS project using ‘Integration Service Project’ in DevEnv
 
 - Create SSIS Package for Stage Server
-open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named account_db, transaction_db, branch_doc, staff_doc, product_doc
 
 	**Remember**
@@ -85,19 +85,28 @@ we have 2 database table and 2 excel file, one excel workbook has two sheets. So
   ```
 
 - Create Dimension and Fact table in DWH
-  <br> A fully denormalized database best for OLAP/DWH
+  <br> As in OLAP/DWH we need to denormalized dimension tables and extract facts, so
+  <be> we merged account_table and product_table
+  <br> we merged branch_table and region_table
+  <br> we merged transaction_table and staff_table
+  <br> we created a new dimension date table
+  <br> we created a new dimension location table
+  <br> we extracted facts from account table and created a new fact table
+  <br> we extracted facts from transaction table and created a new fact table
+
   ```sql
   create table dim_date
   (
-  	date_id		int			primary key,
+  	id		int		primary key	identity(1,1),
+  	date_id		int		unique,
   	full_date	datetime,
   	year_no		int,
-  	sem_no		tinyint,
-  	qtr_no		tinyint,
-  	month_no	tinyint,
+  	sem_no		int,
+  	qtr_no		int,
+  	month_no	int,
   	month_name	varchar(10),
-  	week_no		tinyint,
-  	day_no		tinyint,
+  	week_no		int,
+  	day_no		int,
   	day_name	varchar(10)
   )
   ```
@@ -168,8 +177,82 @@ we have 2 database table and 2 excel file, one excel workbook has two sheets. So
   )
   ```
 
+- Create Reference Tables/Views in DWH
+  <br> As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data. In case of big data, we can create reference ‘Views’ and in case of small data we can have reference ‘Tables’ but ‘Views’ are more reliable in terms of data fetching.
+
+  <br> reference view because account_table and product_table merged
+  ```sql
+  create view vw_ref_dim_account
+  as
+  select a.acc_id, a.cust_name, a.cust_add, a.cust_state,
+  a.cust_zipcode, a.br_id, a.prod_id, p.prod_name, a.status
+  from bank.dbo.account_table a join bank.dbo.product_table p on a.prod_id = p.prod_id
+  ```
+
+  <br> reference view because branch_table and region_table merged
+  ```sql
+  create view vw_ref_dim_branch
+  as
+  select b.br_id, b.br_name, b.br_add, b.br_state, b.br_zipcode, r.reg_id, r.reg_name
+  from bank.dbo.branch_table b join bank.dbo.region_table r on b.reg_id = r.reg_id
+  ```
+
+  <br> reference view because transaction_table and staff_table merged
+  ```sql
+  create view vw_ref_dim_transaction
+  as
+  select t.tran_id, t.acc_id, t.br_id, t.txn_type, t.chq_no, t.chq_date, t.staff_id,
+  s.staff_name, s.designation
+  from bank.dbo.transaction_table t join bank.dbo.staff_table s on t.staff_id = s.staff_id
+  ```
+
+  <br> populate new date dimension table dim_date
+  ```sql
+  declare @startdate datetime
+  declare @enddate datetime = getdate()
+
+  select @startdate = min(doo) from bank.dbo.account_table
+
+  while @startdate <= @enddate
+  begin
+  	insert into dim_date values
+  	(
+  		cast(format(@startdate, 'ddMMyyyy') as int),
+  		@startdate,
+  		year(@startdate),
+  		case
+  			when month(@startdate) in (1, 2, 3, 4, 5, 6) then 1
+  			else 2
+  		end,
+  		case
+  			when month(@startdate) in (1, 2, 3) then 1
+  			when month(@startdate) in (4, 5, 6) then 2
+  			when month(@startdate) in (7, 8, 9) then 3
+  			when month(@startdate) in (10, 11, 12) then 4
+  	   end,
+  	   month(@startdate),
+  	   datename(mm, @startdate),
+  	   datepart(ww, @startdate),
+  	   day(@startdate),
+  	   datename(dw, @startdate)
+  	)
+
+  	set @startdate = dateadd(dd, 1, @startdate)
+  end
+  ```
+
+    
+
+
+
+
+
+
+
+  
+  
 - Create SSIS Package for DWH Server
-open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 
 - Data Loading to DWH Server from Stage Database
 <br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
