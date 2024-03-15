@@ -2,8 +2,8 @@
 ## Table of Content
 - [Overview](#overview)
 - [Tools Used](#tools-used)
-- [Database Creation](#database-creation)
-- [SSIS (SQL Server Integration Service)](#ssis-sql-server-integration-service)
+- [Stage Database Creation](#stage-database-creation)
+- [SSIS for Stage Database (SQL Server Integration Service)](#ssis-for-stage-database-sql-server-integration-service)
 
 ### Overview
 - This is a daily bank operation project.
@@ -18,7 +18,7 @@
 - SSAS - 
 - SSRS -
 
-### Database Creation
+### Stage Database Creation
 - create a stage database named ‘bank_stage’ (where ETL will happen)
   ```sql
   create database bank_stage
@@ -27,13 +27,13 @@
   ```sql
   use bank_stage
   ```
-### SSIS (SQL Server Integration Service)
+### SSIS for Stage Database (SQL Server Integration Service)
 - Create SSIS Project
 <br> Create SSIS project using ‘Integration Service Project’ in DevEnv
 
 - Create SSIS Package for Stage Server
 <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
-we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named account_db, transaction_db, branch_doc, staff_doc, product_doc
+<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named account_db, transaction_db, branch_doc, staff_doc, product_doc
 
 	**Remember**
   <br> Data Flow - ETL Activities
