@@ -86,7 +86,7 @@ we have 2 database table and 2 excel file, one excel workbook has two sheets. So
 
 - Create Dimension and Fact table in DWH
   <br> As in OLAP/DWH we need to denormalized dimension tables and extract facts, so
-  <be> we merged account_table and product_table
+  <br> we merged account_table and product_table
   <br> we merged branch_table and region_table
   <br> we merged transaction_table and staff_table
   <br> we created a new dimension date table
