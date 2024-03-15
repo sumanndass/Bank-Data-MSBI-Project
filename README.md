@@ -39,14 +39,14 @@
   <br> Data Flow - ETL Activities
 	<br> Control Flow - Non-ETL Activities
 
-- Data Loading to Stage Server from Database
+- Data Loading to Stage Server from `bank` Database
 <br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
 <br> -> ‘Start’ the project
 
-- Data Loading to Stage Server from Excel
-<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
+- Data Loading to Stage Server from Excel Document
+<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> if anything mismatch in data type then drag  drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
 <br> -> ‘Start’ the project
