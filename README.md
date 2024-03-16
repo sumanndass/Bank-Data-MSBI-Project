@@ -4,6 +4,7 @@
 - [Tools Used](#tools-used)
 - [Stage Database Creation](#stage-database-creation)
 - [SSIS for Stage Database (SQL Server Integration Service)](#ssis-for-stage-database-sql-server-integration-service)
+- [SSIS for Data Warehouse Database (SQL Server Integration Service)](#ssis-for-data-warehouse-database-sql-server-integration-service)
 
 ### Overview
 - This is a daily bank operation project.
@@ -18,16 +19,17 @@
 - SSAS - 
 - SSRS -
 
-### Stage Database Creation
+### SSIS for Stage Database (SQL Server Integration Service)
 - create a stage database named ‘bank_stage’ (where ETL will happen)
   ```sql
   create database bank_stage
   ```
+
 - use the 'bank_stage' database
   ```sql
   use bank_stage
   ```
-### SSIS for Stage Database (SQL Server Integration Service)
+
 - Create SSIS Project
 <br> Create SSIS project using ‘Integration Service Project’ in DevEnv
 
@@ -75,6 +77,7 @@
   <br> -> Find the error logs in Windows Event Viewer -> Windows Logs -> Application
   <br> -> Set this task for other packages also
 
+### SSIS for Data Warehouse Database (SQL Server Integration Service)
 - Create Data Warehouse Database
   ```sql
   create database bank_dw
