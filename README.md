@@ -243,7 +243,42 @@
   	set @startdate = dateadd(dd, 1, @startdate)
   end
   ```
+  
+  <br> populate new dimension location table dim_location
+  ```sql
+  insert into dim_location values
+  (1, 'India', 'Andhra Pradesh', 'Visakhapatnam'),
+  (2, 'India', 'Arunachal Pradesh', 'Itanagar'),
+  (3, 'India', 'Assam', 'Guwahati'),
+  (4, 'India', 'Bihar', 'Patna'),
+  (5, 'India', 'Chhattisgarh', 'Raipur'),
+  (6, 'India', 'Delhi', 'New Delhi'),
+  (7, 'India', 'Goa', 'Vasco da Gama'),
+  (8, 'India', 'Gujarat', 'Ahmedabad'),
+  (9, 'India', 'Haryana', 'Faridabad'),
+  (10, 'India', 'Himachal Pradesh', 'Shimla'),
+  (11, 'India', 'Jharkhand', 'Jamshedpur'),
+  (12, 'India', 'Karnataka', 'Bengaluru'),
+  (13, 'India', 'Kerala', 'Kochi'),
+  (14, 'India', 'Madhya Pradesh', 'Indore'),
+  (15, 'India', 'Maharashtra', 'Mumbai'),
+  (16, 'India', 'Manipur', 'Imphal'),
+  (17, 'India', 'Meghalaya', 'Shillong'),
+  (18, 'India', 'Mizoram', 'Aizawl'),
+  (19, 'India', 'Nagaland', 'Dimapur'),
+  (20, 'India', 'Odisha', 'Bhubaneswar'),
+  (21, 'India', 'Punjab', 'Ludhiana'),
+  (22, 'India', 'Rajasthan', 'Jaipur'),
+  (23, 'India', 'Sikkim', 'Gangtok'),
+  (24, 'India', 'Tamil Nadu', 'Chennai'),
+  (25, 'India', 'Telangana', 'Hyderabad'),
+  (26, 'India', 'Tripura', 'Agartala'),
+  (27, 'India', 'Uttar Pradesh', 'Lucknow'),
+  (28, 'India', 'Uttarakhand', 'Dehradun'),
+  (29, 'India', 'West Bengal', 'Kolkata')
+  ```
 
+  <br> we have 7 dimension tables and 2 fact tables. So, we need to create 7 packages, named `DWH_Load_dim_branch`, `DWH_Load_dim_account`, `DWH_Load_dim_transsaction`, `DWH_Load_fact_account`, `DWH_Load_fact_transaction` and 2 derived dimension tables (`dim_date` and `dim_location`) are already loaded.
     
 
 
