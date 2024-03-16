@@ -279,21 +279,12 @@
   ```
 
   <br> we have 7 dimension tables and 2 fact tables. So, we need to create 7 packages, named `DWH_Load_dim_branch`, `DWH_Load_dim_account`, `DWH_Load_dim_transsaction`, `DWH_Load_fact_account`, `DWH_Load_fact_transaction` and 2 derived dimension tables (`dim_date` and `dim_location`) are already loaded.
-    
 
-
-
-
-
-
-
-  
-  
 - Create SSIS Package for DWH Server
-<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+  <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 
 - Data Loading to DWH Server from Stage Database
-<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
+  <br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘OLE DB Source’ and double click on it -> add source connection -> drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
 <br> -> ‘Start’ the project
