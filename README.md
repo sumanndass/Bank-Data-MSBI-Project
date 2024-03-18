@@ -67,6 +67,7 @@
      	<br> &emsp; -> double click on it
        	<br> &emsp; -> in `General` select `OLE DB` in `ConnectionType` and `bank_stage` in `Connection`
        	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
+  	<br> &emsp; -> drag `green pipe` from Execute SQL task to Data flow task
        	<br> &emsp; -> ‘Start’ the project
 
 - Data Loading to `bank_stage` Server from `Excel` Document
