@@ -45,13 +45,18 @@
   <br> -> drag `Data Flow Task` in `Control Flow` section
   <br> -> double click on `Data Flow Task`
   <br> -> drag `OLE DB Source` and double click on it
-  	<br> &emsp; -> add source connection
-  -> drag ‘OLE DB Destination’ and double click on it -> add destination
-<br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
--> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
-<br> -> ‘Start’ the project
+  	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
+  	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
+  	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank` in `Initial catalog` -> Ok -> Ok
+  	<br> &emsp; -> select `Data access mode` as `Table or view` -> choose `[dbo].[account_table]` from `Name of the table or the view` -> Ok
+  <br> -> drag ‘OLE DB Destination’ and double click on it -> add destination
+  <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
+  <br> -> stage table always needs fresh data
+  <br> ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it
+  <br> -> add SQL truncate command to delete all old data from stage whenever new data comes
+  <br> -> ‘Start’ the project
 
-- Data Loading to Stage Server from Excel Document
+- Data Loading to `bank_stage` Server from `Excel` Document
 <br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> if anything mismatch in data type then drag  drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
