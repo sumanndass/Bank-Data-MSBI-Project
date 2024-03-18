@@ -2,7 +2,6 @@
 ## Table of Content
 - [Overview](#overview)
 - [Tools Used](#tools-used)
-- [Stage Database Creation](#stage-database-creation)
 - [SSIS for Stage Database (SQL Server Integration Service)](#ssis-for-stage-database-sql-server-integration-service)
 - [SSIS for Data Warehouse Database (SQL Server Integration Service)](#ssis-for-data-warehouse-database-sql-server-integration-service)
 
@@ -46,7 +45,7 @@
   <br> -> drag `Data Flow Task` in `Control Flow` section
   <br> -> double click on `Data Flow Task`
   <br> -> drag `OLE DB Source` and double click on it
-  	<br> -> add source connection
+          <br> -> add source connection
   -> drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
