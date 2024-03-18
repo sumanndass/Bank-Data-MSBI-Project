@@ -34,7 +34,7 @@
 <br> Create SSIS project using ‘Integration Service Project’ in DevEnv
 
 - Create SSIS Package for Stage Server
-<br>open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 <br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named `account_db`, `transaction_db`, `branch_doc`, `staff_doc`, `product_doc`
 
 	**Remember**
@@ -42,11 +42,11 @@
 	<br> Control Flow - Non-ETL Activities
 
 - Data Loading to `bank_stage` Server from `bank` Database
-  <br>-> double click on SSIS Packages
-  -> drag `Data Flow Task` in `Control Flow` section
-  -> double click on `Data Flow Task`
-  -> drag `OLE DB Source` and double click on it
-  	-> add source connection
+  <br> -> double click on SSIS Packages
+  <br> -> drag `Data Flow Task` in `Control Flow` section
+  <br> -> double click on `Data Flow Task`
+  <br> -> drag `OLE DB Source` and double click on it
+  	<br> -> add source connection
   -> drag ‘OLE DB Destination’ and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
