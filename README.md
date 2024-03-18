@@ -48,7 +48,8 @@
   	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
   	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
   	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank` in `Initial catalog` -> Ok -> Ok
-  	<br> &emsp; -> select `Data access mode` as `Table or view` -> choose `[dbo].[account_table]` from `Name of the table or the view` -> Ok
+  	<br> &emsp; -> select `Data access mode` as `Table or view`
+  	<br> &emsp; -> choose `[dbo].[account_table]` from `Name of the table or the view` -> Ok
   <br> -> drag ‘OLE DB Destination’ and double click on it -> add destination
   <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
   <br> -> stage table always needs fresh data
