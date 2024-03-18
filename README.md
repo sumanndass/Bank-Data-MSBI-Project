@@ -1,4 +1,4 @@
-# Bank-Data-MSBI-Project
+![image](https://github.com/sumanndass/Bank-Data-MSBI-Project/assets/156992689/4e1c908e-a6a3-49ee-bc7c-402180ff5948)# Bank-Data-MSBI-Project
 ## Table of Content
 - [Overview](#overview)
 - [Tools Used](#tools-used)
@@ -44,13 +44,23 @@
   <br> -> double click on SSIS Packages
   <br> -> drag `Data Flow Task` in `Control Flow` section
   <br> -> double click on `Data Flow Task`
-  <br> -> drag `OLE DB Source` and double click on it
+  <br> -> drag `OLE DB Source`
+     	<br> &emsp; -> double click on it
   	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
   	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
   	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank` in `Initial catalog` -> Ok -> Ok
   	<br> &emsp; -> select `Data access mode` as `Table or view`
   	<br> &emsp; -> choose `[dbo].[account_table]` from `Name of the table or the view` -> Ok
-  <br> -> drag ‘OLE DB Destination’ and double click on it -> add destination
+  <br> -> drag `OLE DB Destination`
+   	<br> &emsp; -> drag `blue pipe` from source to destination
+       	<br> &emsp; -> double click on it
+   	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
+  	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
+  	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank_stage` in `Initial catalog` -> Ok -> Ok
+  	<br> &emsp; -> select `Data access mode` as `Table or view - fast load`
+  	<br> &emsp; -> select `New` in `Name of the table or the view`
+    	<br> &emsp; -> change table name to `account_stage` and change data type if needed -> Ok
+      	<br> &emsp; -> now click on `Mappings` to check source and destination column and data type are corrected or not
   <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
   <br> -> stage table always needs fresh data
   <br> ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it
