@@ -42,7 +42,7 @@
 	<br> Control Flow - Non-ETL Activities
 
 - Data Loading to `bank_stage` Server from `bank` Database
-  -> double click on SSIS Packages
+  <br>-> double click on SSIS Packages
   -> drag `Data Flow Task` in `Control Flow` section
   -> double click on `Data Flow Task`
   -> drag `OLE DB Source` and double click on it
