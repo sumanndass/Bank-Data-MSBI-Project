@@ -60,12 +60,14 @@
   	<br> &emsp; -> select `Data access mode` as `Table or view - fast load`
   	<br> &emsp; -> select `New` in `Name of the table or the view`
     	<br> &emsp; -> change table name to `account_stage` and change data type if needed -> Ok
-      	<br> &emsp; -> now click on `Mappings` to check source and destination column and data type are corrected or not
-  <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
+      	<br> &emsp; -> now click on `Mappings` to check source and destination column and data type are corrected or not -> Ok
+  <br> -> change names in `Connection Managers` for better understanding -> right click on it and `Convert to Package Connection` for rest of the project
   <br> -> stage table always needs fresh data
-  <br> ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it
-  <br> -> add SQL truncate command to delete all old data from stage whenever new data comes
-  <br> -> ‘Start’ the project
+  <br> -> so, drag `Execute SQL Task` in ‘Control Flow’
+     	<br> &emsp; -> double click on it
+       	<br> &emsp; -> in `General` select `OLE DB` in `ConnectionType` and `bank_stage` in `Connection`
+       	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
+       	<br> &emsp; -> ‘Start’ the project
 
 - Data Loading to `bank_stage` Server from `Excel` Document
 <br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> if anything mismatch in data type then drag  drag ‘OLE DB Destination’ and double click on it -> add destination
