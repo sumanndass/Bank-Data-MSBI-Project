@@ -1,4 +1,4 @@
-![image](https://github.com/sumanndass/Bank-Data-MSBI-Project/assets/156992689/4e1c908e-a6a3-49ee-bc7c-402180ff5948)# Bank-Data-MSBI-Project
+# Bank-Data-MSBI-Project
 ## Table of Content
 - [Overview](#overview)
 - [Tools Used](#tools-used)
