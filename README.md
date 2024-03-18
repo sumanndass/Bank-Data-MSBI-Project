@@ -181,8 +181,9 @@
   ```
 
 - Create Reference Tables/Views in DWH
-  <br> As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data. In case of big data, we can create reference ‘Views’ and in case of small data we can have reference ‘Tables’ but ‘Views’ are more reliable in terms of data fetching.
-
+  <br> As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data.
+  <br> We will use referencee table becuase we will use more options in SSIS. By the way, below reference views also can be used for data fetching from bank_stage to bank_dw.
+ 
   <br> reference view because account_table and product_table merged
   ```sql
   create view vw_ref_dim_account
