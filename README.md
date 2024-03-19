@@ -362,16 +362,21 @@
   	<br> &emsp; -> select 'Data access mode' as 'Table or view'
   	<br> &emsp; -> choose '[dbo].[account_stage]' from 'Name of the table or the view' -> Ok
   <br> -> drag 'Lookup'
-    	<br> &emsp; -> Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'[click here](https://github.com/sumanndass/Bank-Data-MSBI-Project/blob/main/ETL_Mapping_Doc.xlsx)
+    	<br> &emsp; -> Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'
+      	<br> &emsp; -> connect 'blue pipe' from 'OLE DB Source' to 'Lookup'
+      	<br> &emsp; -> double click on it
+      	<br> &emsp; -> choose 'Redirect rows to no match output' in '﻿Specify how to handle rows with no matching entries' in 'General'
+	<br> &emsp; -> in 'Connection' choose 'bank_stage' in 'OLE DB Connection Manager' and choose 'product_stage' in 'Use a table or a view'
+      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Input Columns' and tick desired column 'prod_name' -> Ok
   <br> -> drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from source to destination
+   	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'OLE DB Destination'
        	<br> &emsp; -> double click on it
    	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
   	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' -> Ok -> Ok
+  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank_dw' in 'Initial catalog' -> Ok -> Ok
   	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
   	<br> &emsp; -> select 'New' in 'Name of the table or the view'
-    	<br> &emsp; -> change table name to 'account_stage' and change data type if needed -> Ok
+    	<br> &emsp; -> change table name to 'dim_account' and change data type if needed -> Ok
       	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
   <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
   <br> -> stage table always needs fresh data
