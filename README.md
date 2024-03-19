@@ -46,15 +46,15 @@
   <br> -> double click on `Data Flow Task`
   <br> -> drag `OLE DB Source`
      	<br> &emsp; -> double click on it
-  	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
+  	<br> &emsp; -> in `connection Manager` select `New` in `OLE DB Connection manager` -> againg select `New` -> Ok
   	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
   	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank` in `Initial catalog` -> Ok -> Ok
   	<br> &emsp; -> select `Data access mode` as `Table or view`
   	<br> &emsp; -> choose `[dbo].[account_table]` from `Name of the table or the view` -> Ok
   <br> -> drag `OLE DB Destination`
-   	<br> &emsp; -> drag `blue pipe` from source to destination
+   	<br> &emsp; -> connect `blue pipe` from source to destination
        	<br> &emsp; -> double click on it
-   	<br> &emsp; -> in `connection Manager` select `New` -> againg select `New` -> Ok
+   	<br> &emsp; -> in `connection Manager` select `New` in `OLE DB Connection manager` -> againg select `New` -> Ok
   	<br> &emsp; -> select `Provider` as `Native OLE DB\Microsoft OLE DB Driver for SQL Server`
   	<br> &emsp; -> put `Server or file name` as `.` -> select database name `bank_stage` in `Initial catalog` -> Ok -> Ok
   	<br> &emsp; -> select `Data access mode` as `Table or view - fast load`
@@ -67,11 +67,44 @@
      	<br> &emsp; -> double click on it
        	<br> &emsp; -> in `General` select `OLE DB` in `ConnectionType` and `bank_stage` in `Connection`
        	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
-  	<br> &emsp; -> drag `green pipe` from Execute SQL task to Data flow task
+  	<br> &emsp; -> connect `green pipe` from `Execute SQL task` to `Data Flow Task`
        	<br> &emsp; -> ‘Start’ the project
+  	<br> &emsp; -> do the same for `transaction _db` package
 
 - Data Loading to `bank_stage` Server from `Excel` Document
-<br> -> double click on SSIS Packages -> drag ‘Data Flow Task’ in ‘Control Flow’ section -> double click on ‘Data Flow Task' -> drag ‘Excel Source’ and double click on it -> add source connection -> if anything mismatch in data type then drag  drag ‘OLE DB Destination’ and double click on it -> add destination
+<br> -> double click on SSIS Packages
+<br> -> drag `Data Flow Task` in `Control Flow` section
+<br> -> double click on `Data Flow Task`
+<br> -> drag `Excel Source`
+     	<br> &emsp; -> double click on it
+  	<br> &emsp; -> in `connection Manager` select `New`
+  	<br> &emsp; -> find the `excel` document path and choose the same and select proper `Excel version` -> Ok
+  	<br> &emsp; -> select `Data access mode` as `Table or view`
+  	<br> &emsp; -> choose `branch$` from `Name of the Excel sheet` -> Ok
+<br> -> drag `Data Conversion`
+     	<br> &emsp; -> connect `blue pipe` from `Excel Source` to `Data Conversion`
+     	<br> &emsp; -> double click on it
+     	<br> &emsp; -> select the `Available Input Columns`
+     	<br> &emsp; -> change the `Data Type` and `Length` -> Ok
+<br> -> drag `OLE DB Destination`
+   	<br> &emsp; -> drag `blue pipe` from `Data Conversion` to `OLE DB Destination`
+       	<br> &emsp; -> double click on it
+   	<br> &emsp; -> in `connection Manager` select `dest.bank_stage` (which was saved earlier) in `OLE DB Connection manager`
+  	<br> &emsp; -> select `Data access mode` as `Table or view - fast load`
+  	<br> &emsp; -> select `New` in `Name of the table or the view`
+    	<br> &emsp; -> change table name to `branch_stage` and change data type if needed -> Ok
+      	<br> &emsp; -> now click on `Mappings` choose proper `Input Column` and `Destination Column` -> Ok
+<br> -> change names in `Connection Managers` for better understanding -> right click on it and `Convert to Package Connection` for rest of the project
+<br> -> stage table always needs fresh data
+<br> -> so, drag `Execute SQL Task` in ‘Control Flow’
+     	<br> &emsp; -> double click on it
+       	<br> &emsp; -> in `General` select `OLE DB` in `ConnectionType` and `bank_stage` in `Connection`
+       	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
+  	<br> &emsp; -> connect `green pipe` from `Execute SQL task` to `Data Flow Task`
+       	<br> &emsp; -> ‘Start’ the project
+  	<br> &emsp; -> do the same for `transaction _db` package
+
+and double click on it -> add destination
 <br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
 -> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
 <br> -> ‘Start’ the project
