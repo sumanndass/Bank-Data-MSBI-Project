@@ -24,15 +24,15 @@
   create database bank_stage
   ```
 
-- use the 'bank_stage' database
+- **use the 'bank_stage' database**
   ```sql
   use bank_stage
   ```
 
-- Create SSIS Project
+- **Create SSIS Project**
 <br> Create SSIS project using ‘Integration Service Project’ in DevEnv
 
-- Create SSIS Package for Stage Server
+- **Create SSIS Package for Stage Server**
 <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 <br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named `account_db`, `transaction_db`, `branch_doc`, `staff_doc`, `product_doc`
 
@@ -40,7 +40,7 @@
   <br> Data Flow - ETL Activities
 	<br> Control Flow - Non-ETL Activities
 
-- Data Loading to `bank_stage` Server from `bank` Database
+- **Data Loading to `bank_stage` Server from `bank` Database**
   <br> -> double click on `account_db` SSIS Packages
   <br> -> drag `Data Flow Task` in `Control Flow` section
   <br> -> double click on `Data Flow Task`
