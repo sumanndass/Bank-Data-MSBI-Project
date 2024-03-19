@@ -19,7 +19,7 @@
 - SSRS -
 
 ### SSIS for Stage Database (SQL Server Integration Service)
-- create a stage database named ‘bank_stage’ (where ETL will happen)
+- **create a stage database named ‘bank_stage’ (where ETL will happen)**
   ```sql
   create database bank_stage
   ```
@@ -103,12 +103,6 @@
   	<br> &emsp; -> connect `green pipe` from `Execute SQL task` to `Data Flow Task`
        	<br> &emsp; -> ‘Start’ the project
   	<br> &emsp; -> do the same for `staff_doc` and `product_doc` packages
-
-
-
-
-
-
 
 - SSIS Logging (To know about the status of the successful loadings)
   <br> create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
