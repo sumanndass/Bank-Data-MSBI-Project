@@ -135,13 +135,12 @@
   <br> -> ‘Start’ the project
   <br> -> do the same for `transaction_db`, `branch_doc`, `staff_doc`, `product_doc` packages
 
-
-- SSIS Failure Logging (To know about the failure happened in loading)
-  <br> -> double click on desired package -> go to ‘Extension’ -> ‘SSIS’ -> ‘Logging’
--> choose all containers -> add ‘SSIS log provider for SQL Server’, tick the same and choose the destination server -> go to ‘Details’ and tick ‘OnError’ and ‘OnTaskFailed’
-  <br> -> Find the error logs in system tables in the selected database by using command ```sql select * from sysssislog```
-  <br> -> again, choose all containers -> add ‘SSIS log provider for Windows Event Log’, tick the same -> go to ‘Details’ and tick ‘OnError’ and ‘OnTaskFailed’
-  <br> -> Find the error logs in Windows Event Viewer -> Windows Logs -> Application
+- **SSIS Failure Logging (To know about the failure happened in loading)**
+  <br> -> double click on desired package -> go to `Extension` -> `SSIS` -> `Logging`
+  <br> -> choose all `Containers:` -> `Add` `SSIS log provider for SQL Server`, tick the same and choose the destination server `bank_stage` in `Configuration` -> go to `Details` and tick `OnError` and `OnTaskFailed`
+  <br> -> Find the error logs in system tables in the selected database by using command `sql select * from sysssislog`
+  <br> -> again, choose all `Containers:` -> add `SSIS log provider for Windows Event Log`, tick the same -> go to `Details` and tick `OnError` and `OnTaskFailed`
+  <br> -> Find the error logs in `Windows Event Viewer` -> `Windows Logs` -> `Application`
   <br> -> Set this task for other packages also
 
 ### SSIS for Data Warehouse Database (SQL Server Integration Service)
