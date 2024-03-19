@@ -362,7 +362,7 @@
   	<br> &emsp; -> select 'Data access mode' as 'Table or view'
   	<br> &emsp; -> choose '[dbo].[account_stage]' from 'Name of the table or the view' -> Ok
   <br> -> drag 'Lookup'
-    	<br> &emsp; -> Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'
+    	<br> &emsp; -> Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'[click here](https://github.com/sumanndass/Bank-Data-MSBI-Project/blob/main/ETL_Mapping_Doc.xlsx)
   <br> -> drag 'OLE DB Destination'
    	<br> &emsp; -> connect 'blue pipe' from source to destination
        	<br> &emsp; -> double click on it
