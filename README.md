@@ -41,7 +41,7 @@
 	<br> Control Flow - Non-ETL Activities
 
 - Data Loading to `bank_stage` Server from `bank` Database
-  <br> -> double click on SSIS Packages
+  <br> -> double click on `account_db` SSIS Packages
   <br> -> drag `Data Flow Task` in `Control Flow` section
   <br> -> double click on `Data Flow Task`
   <br> -> drag `OLE DB Source`
@@ -69,10 +69,10 @@
        	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
   	<br> &emsp; -> connect `green pipe` from `Execute SQL task` to `Data Flow Task`
        	<br> &emsp; -> ‘Start’ the project
-  	<br> &emsp; -> do the same for `transaction _db` package
+  	<br> &emsp; -> do the same for `transaction_db` package
 
 - Data Loading to `bank_stage` Server from `Excel` Document
-<br> -> double click on SSIS Packages
+<br> -> double click on `branch_doc` SSIS Packages
 <br> -> drag `Data Flow Task` in `Control Flow` section
 <br> -> double click on `Data Flow Task`
 <br> -> drag `Excel Source`
@@ -102,12 +102,7 @@
        	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
   	<br> &emsp; -> connect `green pipe` from `Execute SQL task` to `Data Flow Task`
        	<br> &emsp; -> ‘Start’ the project
-  	<br> &emsp; -> do the same for `transaction _db` package
-
-and double click on it -> add destination
-<br> -> change names in ‘Connection Manager’ for better understanding -> right click on it and ‘Convert to Package Connection’ for rest of the project
--> stage table always needs fresh data ->so, drag ‘Execute SQL Task’ in ‘Control Flow’ and double click on it -> add SQL truncate command to delete all old data from stage whenever new data comes
-<br> -> ‘Start’ the project
+  	<br> &emsp; -> do the same for `staff_doc` and `product_doc` packages
 
 - SSIS Logging (To know about the status of the successful loadings)
   <br> create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
