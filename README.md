@@ -104,6 +104,12 @@
        	<br> &emsp; -> ‘Start’ the project
   	<br> &emsp; -> do the same for `staff_doc` and `product_doc` packages
 
+
+
+
+
+
+
 - SSIS Logging (To know about the status of the successful loadings)
   <br> create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
   ```sql
