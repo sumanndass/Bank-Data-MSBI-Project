@@ -34,7 +34,7 @@
 
 - **Create SSIS Package for Stage Server**
 <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
-<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named `account_db`, `transaction_db`, `branch_doc`, `staff_doc`, `product_doc`
+<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named `account_db`, `transaction_db`, `branch_doc`, `staff_doc`, `product_doc`.
 
 	**Remember**
   <br> Data Flow - ETL Activities
@@ -71,7 +71,7 @@
        	<br> &emsp; -> ‘Start’ the project
   	<br> &emsp; -> do the same for `transaction_db` package
 
-- Data Loading to `bank_stage` Server from `Excel` Document
+- **Data Loading to `bank_stage` Server from `Excel` Document**
 <br> -> double click on `branch_doc` SSIS Packages
 <br> -> drag `Data Flow Task` in `Control Flow` section
 <br> -> double click on `Data Flow Task`
@@ -87,7 +87,7 @@
      	<br> &emsp; -> select the `Available Input Columns`
      	<br> &emsp; -> change the `Data Type` and `Length` -> Ok
 <br> -> drag `OLE DB Destination`
-   	<br> &emsp; -> drag `blue pipe` from `Data Conversion` to `OLE DB Destination`
+   	<br> &emsp; -> connect `blue pipe` from `Data Conversion` to `OLE DB Destination`
        	<br> &emsp; -> double click on it
    	<br> &emsp; -> in `connection Manager` select `dest.bank_stage` (which was saved earlier) in `OLE DB Connection manager`
   	<br> &emsp; -> select `Data access mode` as `Table or view - fast load`
@@ -104,7 +104,7 @@
        	<br> &emsp; -> ‘Start’ the project
   	<br> &emsp; -> do the same for `staff_doc` and `product_doc` packages
 
-- SSIS Logging (To know about the status of the successful loadings)
+- **SSIS Logging (To know about the status of the successful loadings)**
   <br> create a SSIS logging table named ‘ssis_log’ (where SSIS status will store)
   ```sql
   create table ssis_log
@@ -116,9 +116,25 @@
   	pkg_exec_status		varchar(100)	not null
   )
   ```
-  <br> now store SSIS loading status in newly created table
-  <br> -> drag 'Execute SQL Task' in 'Control Flow' double click on it -> insert SQL Command ```sql insert into ssis_log values(?, getdate(), ?, 'success')``` -> in 'Parameter Mapping' use 'System::PackageName' for first '?' -> now in 'Data Flow', create a variable called 'row_cnt' -> drag 'Row Count', double click on it and select the 'row_cnt' variable -> now in 'Control Flow', double click on newly created 'Execute SQL Task' and in 'Parameter Mapping' use 'User::row_cnt' for second '?'
-  <br> -> set this ‘Execute SQL Task’ for other packages also
+  <br> now we will store SSIS loading status in newly created table
+  <br> -> open `account_db` package and drag `Execute SQL Task` in `Control Flow`
+  <br> -> double click on it
+  <br> -> in `General` select `OLE DB` in `ConnectionType` and `bank_stage` in `Connection`
+  <br> -> add `SQLStatement` command (`insert into ssis_log values(?, getdate(), ?, 'Success...')`)
+  <br> -> in `Parameter Mapping` click on `Add` and choose `System::PackageName` in `Variable Name` for first `?` means 0th position
+  <br> -> choose `Varchar` as `Data type`, choose `0` in `Parameter Name` for the 0th position `?`, choose `-1` for `Parameter Size` -> Ok
+  <br> -> now click on `Variables` and select `Add variable` -> choose `Name` like: `row_cnt`
+  <br> -> now in `Data Flow`, drag `Row Count`
+  <br> -> connect `blue pipe` from `OLE DB Source` to `Row Count`
+  <br> -> double click on `Row Count` and select the `User::row_cnt` variable
+  <br> -> connect `blue pipe` from `Row Count` to `OLE DB Destination`
+  <br> -> now in `Control Flow`, double click on newly created `Execute SQL Task`
+  <br> -> in `Parameter Mapping` click on `Add` and choose `User::row_cnt` in `Variable Name` for second `?` means 1st position
+  <br> -> choose `Large_integer` as `Data type`, choose `1` in `Parameter Name` for the 1st position `?`, choose `-1` for `Parameter Size` -> Ok
+  <br> -> connect `green pipe` from `Data Flow Task` to new `Execute SQL Task 1`
+  <br> -> ‘Start’ the project
+  <br> -> do the same for `transaction_db`, `branch_doc`, `staff_doc`, `product_doc` packages
+
 
 - SSIS Failure Logging (To know about the failure happened in loading)
   <br> -> double click on desired package -> go to ‘Extension’ -> ‘SSIS’ -> ‘Logging’
