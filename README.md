@@ -34,7 +34,7 @@
 
 - **Create SSIS Package for Stage Server**
 <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
-<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named 'account_db', 'transaction_db', 'branch_doc', 'staff_doc', 'product_doc'.
+<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named 'account_db', 'transaction_db', 'region_db', 'branch_doc', 'staff_doc', 'product_doc'.
 
 	**Remember**
   <br> Data Flow - ETL Activities
@@ -211,7 +211,8 @@
   	br_id			varchar(4)	foreign key references dim_branch(br_id),
   	prod_id			varchar(2),
   	prod_name		varchar(20),
-  	status			varchar(1)
+  	status			varchar(1),
+  	country_code		int
   )
   ```
   ```sql
@@ -367,9 +368,16 @@
       	<br> &emsp; -> double click on it
       	<br> &emsp; -> choose 'Redirect rows to no match output' in '﻿Specify how to handle rows with no matching entries' in 'General'
 	<br> &emsp; -> in 'Connection' choose 'bank_stage' in 'OLE DB Connection Manager' and choose 'product_stage' in 'Use a table or a view'
-      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Input Columns' and tick desired column 'prod_name' -> Ok
+      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Input Columns' and tick desired column 'prod_name'
+  	<br> &emsp; -> change 'Output Alias' as 'prod_name_lkp' -> Ok
+  <br> -> drag 'Derived Column'
+   	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Derived Column'
+    	<br> &emsp; -> choose 'Lookup Match Output' in 'Output' -> Ok
+       	<br> &emsp; -> double click on it
+   	<br> &emsp; -> enter 'Derived Column Name' as 'country_code_derived', choose 'Derived Column' as 'add as new column'
+     	<br> &emsp; -> enter 'Expression' as '91', choose 'Data Type' as required -> Ok
   <br> -> drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'OLE DB Destination'
+   	<br> &emsp; -> connect 'blue pipe' from 'Derived Column' to 'OLE DB Destination'
        	<br> &emsp; -> double click on it
    	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
   	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
@@ -379,11 +387,4 @@
     	<br> &emsp; -> change table name to 'dim_account' and change data type if needed -> Ok
       	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
   <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
-  <br> -> stage table always needs fresh data
-  <br> -> so, drag 'Execute SQL Task' in 'Control Flow'
-     	<br> &emsp; -> double click on it
-       	<br> &emsp; -> in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-       	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
-  	<br> &emsp; -> connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
-       	<br> &emsp; -> 'Start' the project
-  	<br> &emsp; -> do the same for 'transaction_db' package
+  <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages using reference 'ETL_Mapping_Doc.xlsx'
