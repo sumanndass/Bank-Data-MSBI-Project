@@ -69,7 +69,7 @@
        	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
   	<br> &emsp; -> connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
        	<br> &emsp; -> 'Start' the project
-  	<br> &emsp; -> do the same for 'transaction_db' package
+  	<br> &emsp; -> do the same for 'transaction_db' and 'region_db' package
 
 - **Data Loading to 'bank_stage' Database from 'Excel' Document**
 <br> -> double click on 'branch_doc' SSIS Packages
@@ -194,7 +194,7 @@
   	br_id		varchar(4)	primary key,
   	br_name		varchar(20),
   	br_add		varchar(70),
-  	br_state	varchar(30) 	foreign key references dim_location(state),
+  	br_state	varchar(30),
   	br_zipcode	char(6),
   	reg_id		int,
   	reg_name	char(6)
@@ -206,9 +206,9 @@
   	acc_id			int		primary key,
   	cust_name		varchar(30),
   	cust_add		varchar(70),
-  	cust_state		varchar(30) 	foreign key references dim_location(state),
+  	cust_state		varchar(30),
   	cust_zipcode		varchar(6),
-  	br_id			varchar(4)	foreign key references dim_branch(br_id),
+  	br_id			varchar(4),
   	prod_id			varchar(2),
   	prod_name		varchar(20),
   	status			varchar(1),
@@ -216,11 +216,11 @@
   )
   ```
   ```sql
-  create table dim_transaction
+	  create table dim_transaction
   (
   	tran_id		int		primary key,
-  	acc_id		int		foreign key references dim_account(acc_id),
-  	br_id		varchar(4)	foreign key references dim_branch(br_id),
+  	acc_id		int,
+  	br_id		varchar(4),
   	txn_type	varchar(3),
   	chq_no		varchar(6),
   	chq_date	datetime,
