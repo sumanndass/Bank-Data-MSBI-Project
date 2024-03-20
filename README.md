@@ -387,4 +387,4 @@
     	<br> &emsp; -> change table name to 'dim_account' and change data type if needed -> Ok
       	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
   <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
-  <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages using reference 'ETL_Mapping_Doc.xlsx'
+  <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
