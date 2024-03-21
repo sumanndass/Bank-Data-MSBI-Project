@@ -232,7 +232,7 @@
   ```sql
   create table fact_account
   (
-  	acc_id			int		foreign key references dim_account(acc_id),
+  	acc_id			int,		
   	doo_date_id		int		foreign key references dim_date(date_id),
   	clr_bal			money,
   	unclr_bal		money
@@ -241,7 +241,7 @@
   ```sql
   create table fact_transaction
   (
-  	tran_id			int		foreign key references dim_transaction(tran_id),
+  	tran_id			int,		
   	dot_date_id		int		foreign key references dim_date(date_id),
   	txn_amt			money
   )
@@ -282,7 +282,7 @@
   declare @startdate datetime
   declare @enddate datetime = getdate()
 
-  select @startdate = min(doo) from bank.dbo.account_table
+  select @startdate = cast(min(doo) as date) from bank.dbo.account_table
 
   while @startdate <= @enddate
   begin
@@ -388,3 +388,7 @@
       	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
   <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
   <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
+  <br> -> now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
+  <br> -> however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
+  <br> -> double click on
+  <br> -> drag 'Slowly Changing Dimension'
