@@ -487,7 +487,9 @@ go` in 'SQLStatement' -> Ok -> Ok
   create proc usp_load_account_stage
   as
   begin
+  	--delete all rows from destination
   	truncate table account_stage
+  	--load all data from source to destination
   	insert into account_stage
   	select * from bank.dbo.account_table
   end
