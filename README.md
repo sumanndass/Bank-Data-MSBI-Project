@@ -482,7 +482,7 @@ go` in 'SQLStatement' -> Ok -> Ok
   <br> -> load data from 'bank' server to 'bank_stage' server
   <br> -> for example we are going to load 'account_stage' table in 'bank_stage' server from 'account' table in 'bank' server
   <br> -> now open SQL Server Management Studio
-  <br> -> creating a stored procedure that will load data from 'account' to 'account_stage'
+  <br> -> creating a stored procedure in 'bank_stage' that will load data from 'account' to 'account_stage'
   ```sql
   create proc usp_load_account_stage
   as
@@ -495,3 +495,37 @@ go` in 'SQLStatement' -> Ok -> Ok
   end
   ```
   <br> -> calling the stored procedure `exec usp_load_account_stage`
+  <br> -> now loading 'dim_account' in 'bank_dw' from 'account_stage' in 'bank_stage' and few columns will add and delete in final dimension table
+  <br> -> also note that in data warehouse we will load data incrementally not full loading
+  <br> -> creating a stored procedure that will load data incrementally from 'account_stage' to 'dim_account'
+  ```sql
+  create proc usp_incr_load_dim_account
+  as
+  begin
+  	--Incremental Insert
+  		--select columns that we need to for dimension table
+  	insert into dim_account
+  	select	a.acc_id, a.cust_name, a.cust_add, a.cust_state, a.cust_zipcode, a.br_id,
+  			a.prod_id, p.prod_name, a.status, 91 as 'country_code'
+  		--joining two stage table to get 'prod_name' column
+  	from bank_stage.dbo.account_stage a join bank_stage.dbo.product_stage p
+  	on a.prod_id = p.prod_id
+  		--left joining with 'dim_account' column to know about new data
+  	left join dim_account d on a.acc_id = d.acc_id
+  	where d.acc_id is null
+  	--Incremental Update
+  	update d
+  	set d.cust_name = a.cust_name, d.cust_add = a.cust_add,
+  		d.cust_state = a.cust_state, d.cust_zipcode = a.cust_zipcode, d.br_id = a.br_id,
+  		d.prod_id = a.prod_id, d.prod_name = p.prod_name, d.status = a.status
+  		--joining two stage table to get 'prod_name' column
+  	from bank_stage.dbo.account_stage a join bank_stage.dbo.product_stage p
+  	on a.prod_id = p.prod_id
+  		--joining with 'dim_account' column to know about the updated data
+  	join dim_account d on a.acc_id = d.acc_id
+  	where d.cust_name != a.cust_name or d.cust_add != a.cust_add or
+  		d.cust_state != a.cust_state or d.cust_zipcode != a.cust_zipcode or d.br_id != a.br_id or
+  		d.prod_id != a.prod_id or d.prod_name != p.prod_name or d.status != a.status
+  end
+  ```
+  <br> -> calling the stored procedure `exec usp_incr_load_dim_account`
