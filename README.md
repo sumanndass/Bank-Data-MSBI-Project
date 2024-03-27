@@ -479,20 +479,17 @@ go` in 'SQLStatement' -> Ok -> Ok
       	<br> &emsp; -> Next -> now select dimension column in 'Dimension Columns' and select 'Changing Attribute' in 'Change Type' -> Next -> Next -> Next -> Finish
       	<br> &emsp; -> just remember performance wise 'Slowly Changing Dimension' is not so good because it uses 'OLE DB Command' for data loading and as we know 'OLE DB Command' perform row by row wise.
   <br> -> Incremental loading using 'Stored Procedure'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <br> -> load data from 'bank' server to 'bank_stage' server
+  <br> -> for example we are going to load 'account_stage' table in 'bank_stage' server from 'account' table in 'bank' server
+  <br> -> now open SQL Server Management Studio
+  <br> -> creating a stored procedure that will load data from 'account' to 'account_stage'
+  ```sql
+  create proc usp_load_account_stage
+  as
+  begin
+  	truncate table account_stage
+  	insert into account_stage
+  	select * from bank.dbo.account_table
+  end
+  ```
+  <br> -> calling the stored procedure `exec usp_load_account_stage`
