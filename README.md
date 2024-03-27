@@ -469,7 +469,7 @@ go` in 'SQLStatement' -> Ok -> Ok
   <br> -> Incremental loading using 'Slowly Changing Dimension'
   <br> -> double click on 'DWH_Load_dim_branch'
   <br> -> drag 'Slowly Changing Dimension' just before 'OLE DB Destination' i.e., data loading
-      	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Slowly Changing Dimension'
+        <br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Slowly Changing Dimension'
       	<br> &emsp; -> double click on it
       	<br> &emsp; -> Next -> select '[dbo].[dim_branch]' in 'Table or view' -> choose the 'Business key' column
       	<br> &emsp; -> **Remember**
@@ -478,7 +478,9 @@ go` in 'SQLStatement' -> Ok -> Ok
       	<br> &emsp; -> Historical Attribute -> maintain historic data
       	<br> &emsp; -> Next -> now select dimension column in 'Dimension Columns' and select 'Changing Attribute' in 'Change Type' -> Next -> Next -> Next -> Finish
       	<br> &emsp; -> just remember performance wise 'Slowly Changing Dimension' is not so good because it uses 'OLE DB Command' for data loading and as we know 'OLE DB Command' perform row by row wise.
-	<br> -> Incremental loading using 'Stored Procedure'
+  <br> -> Incremental loading using 'Stored Procedure'
+
+
 
 
 
