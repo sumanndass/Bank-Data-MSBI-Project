@@ -466,8 +466,7 @@ from dim_account d join temp_account t on d.acc_id = t.acc_id
 go
 truncate table temp_account
 go` in 'SQLStatement' -> Ok -> Ok
-
-  <br> -> Incremental loading using 'Lookup'
+  <br> -> Incremental loading using 'Slowly Changing Dimension'
   <br> -> double click on 'DWH_Load_dim_branch'
   <br> -> drag 'Slowly Changing Dimension' just before 'OLE DB Destination' i.e., data loading
       	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Slowly Changing Dimension'
