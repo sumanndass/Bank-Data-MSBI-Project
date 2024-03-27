@@ -390,6 +390,7 @@
   <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
   <br> -> now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
   <br> -> however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
+  
   <br> -> Incremental loading using 'Lookup'
   <br> -> we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
   <br> -> double click on 'DWH_Load_dim_account'
@@ -438,6 +439,7 @@ where acc_id = ?` in 'Component Properties'
       	<br> &emsp; -> connect 'green pipe' from ' Execute Package Task ' to ' Execute Package Task 1'
       	<br> &emsp; -> double click on it and in 'Package' choose the second package in 'PackageNameFromProjectReference' -> Ok
       	<br> &emsp; -> do the same thing till last package
+  
   <br> -> SSIS Performance
   <br> -> Now, due to 'OLE DB Command' in 'Data Flow' the task becomes very slow because it performs row by row operation, to overcome this we will update the data in 'Control Flow' using 'Execute SQL Task' because it performs batch operation.
       	<br> &emsp; -> open 'DWH_Load_dim_account.dtsx'
@@ -466,6 +468,7 @@ from dim_account d join temp_account t on d.acc_id = t.acc_id
 go
 truncate table temp_account
 go` in 'SQLStatement' -> Ok -> Ok
+
   <br> -> Incremental loading using 'Slowly Changing Dimension'
   <br> -> double click on 'DWH_Load_dim_branch'
   <br> -> drag 'Slowly Changing Dimension' just before 'OLE DB Destination' i.e., data loading
@@ -478,6 +481,7 @@ go` in 'SQLStatement' -> Ok -> Ok
       	<br> &emsp; -> Historical Attribute -> maintain historic data
       	<br> &emsp; -> Next -> now select dimension column in 'Dimension Columns' and select 'Changing Attribute' in 'Change Type' -> Next -> Next -> Next -> Finish
       	<br> &emsp; -> just remember performance wise 'Slowly Changing Dimension' is not so good because it uses 'OLE DB Command' for data loading and as we know 'OLE DB Command' perform row by row wise.
+  
   <br> -> Incremental loading using 'Stored Procedure'
   <br> -> load data from 'bank' server to 'bank_stage' server
   <br> -> for example we are going to load 'account_stage' table in 'bank_stage' server from 'account' table in 'bank' server
@@ -513,6 +517,7 @@ go` in 'SQLStatement' -> Ok -> Ok
   		--left joining with 'dim_account' column to know about new data
   	left join dim_account d on a.acc_id = d.acc_id
   	where d.acc_id is null
+
   	--Incremental Update
   	update d
   	set d.cust_name = a.cust_name, d.cust_add = a.cust_add,
@@ -529,3 +534,4 @@ go` in 'SQLStatement' -> Ok -> Ok
   end
   ```
   <br> -> calling the stored procedure `exec usp_incr_load_dim_account`
+  <br> -> major drawback in 'Stored Procedure' is to maintain the code and writing the complex code for more columns.
