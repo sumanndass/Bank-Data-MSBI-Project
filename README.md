@@ -368,7 +368,7 @@
       	<br> &emsp; -> double click on it
       	<br> &emsp; -> choose 'Redirect rows to no match output' in '﻿Specify how to handle rows with no matching entries' in 'General'
 	<br> &emsp; -> in 'Connection' choose 'bank_stage' in 'OLE DB Connection Manager' and choose 'product_stage' in 'Use a table or a view'
-      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Input Columns' and tick desired column 'prod_name'
+      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Lookup Columns' and tick desired column 'prod_name'
   	<br> &emsp; -> change 'Output Alias' as 'prod_name_lkp' -> Ok
   <br> -> drag 'Derived Column'
    	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Derived Column'
@@ -390,5 +390,92 @@
   <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
   <br> -> now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
   <br> -> however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
-  <br> -> double click on
-  <br> -> drag 'Slowly Changing Dimension'
+  <br> -> Incremental loading using 'Lookup'
+  <br> -> we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
+  <br> -> double click on 'DWH_Load_dim_account'
+  <br> -> drag 'Lookup' just before 'OLE DB Destination' i.e., data loading
+      	<br> &emsp; -> connect 'blue pipe' from 'Derived Column' to 'Lookup1'
+      	<br> &emsp; -> double click on it
+      	<br> &emsp; -> choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
+	<br> &emsp; -> in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
+      	<br> &emsp; -> in 'Columns' drag 'acc_id' of 'Available Input Columns' on 'acc_id' of 'Available Lookup Columns' and tick desired column 'prod_name' -> Ok
+      	<br> &emsp; -> now, drag 'OLE DB Destination'
+   	<br> &emsp; -> connect 'blue pipe' from Lookup1' to 'OLE DB Destination'
+   	<br> &emsp; -> choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
+       	<br> &emsp; -> double click on 'OLE DB Destination'
+   	<br> &emsp; -> in 'connection Manager' select 'bank_dw' in 'OLE DB Connection manager'
+  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
+  	<br> &emsp; -> select 'dim_account' in 'Name of the table or the view'
+      	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
+      	<br> &emsp; -> now, drag 'OLE DB Command'
+   	<br> &emsp; -> connect 'blue pipe' from Lookup1' to 'OLE DB Command'
+   	<br> &emsp; -> choose 'Lookup Match Output' in 'Output' for updating data -> Ok
+       	<br> &emsp; -> double click on 'OLE DB Command'
+   	<br> &emsp; -> in 'Connection Manager' select 'bank_dw' in 'Connection Managers'
+   	<br> &emsp; -> in 'SqlCommand' enter `update dim_account
+  set cust_name = ?,
+	cust_add = ?,
+	cust_state = ?,
+	cust_zipcode = ?,
+	prod_name = ?,
+	status = ?
+where acc_id = ?` in 'Component Properties'
+  	<br> &emsp; -> in 'Column Mappings' map 'Input Column' and 'Destination Column' -> Ok
+  	<br> &emsp; -> but the problem with 'OLE DB Command' is that it does not verify whether there have any changes in the matched data or not, it just takes all the data and updating or over writing the same. So, to identify any change in source data we need to use another 'Lookup' before 'OLE DB Command' and identify the actual data where updation is required.
+  	<br> &emsp; -> drag 'Lookup' just before 'OLE DB Command'
+  	<br> &emsp; -> connect 'blue pipe' from 'Lookup 2' to 'OLE DB Command'
+   	<br> &emsp; -> choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
+      	<br> &emsp; -> double click on 'Lookup 2'
+      	<br> &emsp; -> choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
+	<br> &emsp; -> in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
+      	<br> &emsp; -> in 'Columns' connect 'acc_id' to 'acc_id', 'cust_name' to 'cust_name', 'cust_add' to 'cust_add', 'cust_state' to 'cust_state', 'cust_zipcode' to 'cust_zipcode', 'prod_name_lkp' to 'prod_name', 'status' to 'status' -> Ok
+  <br> -> Now, we cannot load all the tables at once, we need to load tables where PKs are present then we can load table where FKs are present.
+      	<br> &emsp; -> now, create one more package named 'DWL_load_tables.dtsx'
+      	<br> &emsp; -> double click on it
+      	<br> &emsp; -> drag 'Execute Package Task' and double click on it
+      	<br> &emsp; -> in 'Package' choose the first package in 'PackageNameFromProjectReference' -> Ok
+      	<br> &emsp; -> again drag another 'Execute Package Task 1'
+      	<br> &emsp; -> connect 'green pipe' from ' Execute Package Task ' to ' Execute Package Task 1'
+      	<br> &emsp; -> double click on it and in 'Package' choose the second package in 'PackageNameFromProjectReference' -> Ok
+      	<br> &emsp; -> do the same thing till last package
+  <br> -> SSIS Performance
+  <br> -> Now, due to 'OLE DB Command' in 'Data Flow' the task becomes very slow because it performs row by row operation, to overcome this we will update the data in 'Control Flow' using 'Execute SQL Task' because it performs batch operation.
+      	<br> &emsp; -> open 'DWH_Load_dim_account.dtsx'
+      	<br> &emsp; -> delete the 'OLE DB Command' and drag 'OLE DB Destination 1'
+      	<br> &emsp; -> connect the 'blue pipe' from 'Lookup 2' to 'OLE DB Destination 1'
+      	<br> &emsp; -> choose 'Lookup No Match Output' as 'Output' -> Ok
+      	<br> &emsp; -> double click on ' OLE DB Destination 1'
+   	<br> &emsp; -> in 'connection Manager' select 'banl_dw' in 'OLE DB Connection manager'
+  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
+  	<br> &emsp; -> select 'New' in 'Name of the table or the view'
+    	<br> &emsp; -> change table name to 'temp_account' and change data type if needed -> Ok
+      	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
+      	<br> &emsp; -> now, in 'Control Flow' drag 'Execute SQL Task'
+      	<br> &emsp; -> double click on it
+  	<br> &emsp; -> in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_dw' in 'Connection'
+       	<br> &emsp; -> add `update d
+set	d.cust_name	= t.cust_name,
+	d.cust_add = t.cust_add,
+	d.cust_state = t.cust_state,
+	d.cust_zipcode = t.cust_zipcode,
+	d.br_id = t.br_id,
+	d.prod_id = t.prod_id,
+	d.prod_name = t.prod_name,
+	d.status = t.status
+from dim_account d join temp_account t on d.acc_id = t.acc_id
+go
+truncate table temp_account
+go` in 'SQLStatement' -> Ok -> Ok
+
+  <br> -> Incremental loading using 'Lookup'
+  <br> -> double click on 'DWH_Load_dim_branch'
+  <br> -> drag 'Slowly Changing Dimension' just before 'OLE DB Destination' i.e., data loading
+      	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Slowly Changing Dimension'
+      	<br> &emsp; -> double click on it
+      	<br> &emsp; -> Next -> select '[dbo].[dim_branch]' in 'Table or view' -> choose the 'Business key' column
+      	<br> &emsp; -> **Remember**
+      	<br> &emsp; -> Fixed Attribute -> No update or change
+      	<br> &emsp; -> Changing Attribute -> Overwriting the data
+      	<br> &emsp; -> Historical Attribute -> maintain historic data
+      	<br> &emsp; -> Next -> now select dimension column in 'Dimension Columns' and select 'Changing Attribute' in 'Change Type' -> Next -> Next -> Next -> Finish
+      	<br> &emsp; -> just remember performance wise 'Slowly Changing Dimension' is not so good because it uses 'OLE DB Command' for data loading and as we know 'OLE DB Command' perform row by row wise.
