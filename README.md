@@ -478,3 +478,19 @@ go` in 'SQLStatement' -> Ok -> Ok
       	<br> &emsp; -> Historical Attribute -> maintain historic data
       	<br> &emsp; -> Next -> now select dimension column in 'Dimension Columns' and select 'Changing Attribute' in 'Change Type' -> Next -> Next -> Next -> Finish
       	<br> &emsp; -> just remember performance wise 'Slowly Changing Dimension' is not so good because it uses 'OLE DB Command' for data loading and as we know 'OLE DB Command' perform row by row wise.
+	<br> -> Incremental loading using 'Stored Procedure'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
