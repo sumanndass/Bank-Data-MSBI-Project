@@ -535,3 +535,9 @@ go` in 'SQLStatement' -> Ok -> Ok
   ```
   <br> -> calling the stored procedure `exec usp_incr_load_dim_account`
   <br> -> major drawback in 'Stored Procedure' is to maintain the code and writing the complex code for more columns.
+
+  <br> -> Incremental loading using 'Merge Statement'
+  <br> -> A 'Merge Statement' is a SQL statement that performs INSERT, UPDATE, and DELETE operations based on the existence of rows matching the selection criteria in the target table.
+  <br> -> now loading 'dim_account' in 'bank_dw' from 'account_stage' in 'bank_stage' and few columns will add and delete in final dimension table
+  <br> -> creating a 'merge statement' that will load data incrementally from 'account_stage' to 'dim_account'
+  ```sql
