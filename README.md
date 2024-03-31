@@ -541,3 +541,35 @@ go` in 'SQLStatement' -> Ok -> Ok
   <br> -> now loading 'dim_account' in 'bank_dw' from 'account_stage' in 'bank_stage' and few columns will add and delete in final dimension table
   <br> -> creating a 'merge statement' that will load data incrementally from 'account_stage' to 'dim_account'
   ```sql
+  create proc usp_merge_dim_account
+  as
+  begin
+
+  	--inserting source table into temp table
+  	select	a.acc_id, a.cust_name, a.cust_add, a.cust_state, a.cust_zipcode, a.br_id, a.prod_id,
+  			p.prod_name, a.status, 91 as 'country_code' into #temp_source
+  	from bank_stage.dbo.account_stage a join bank_stage.dbo.product_stage p
+  	on a.prod_id = p.prod_id
+
+  	merge dim_account as d -- destination table
+  	using #temp_source as s -- source table
+  	on s.acc_id= d.acc_id
+
+  	-- insert
+  	when not matched by target
+  	then
+  	insert(acc_id, cust_name, cust_add, cust_state, cust_zipcode, br_id, prod_id, prod_name, status, country_code)
+  	values(s.acc_id, s.cust_name, s.cust_add, s.cust_state, s.cust_zipcode, s.br_id, s.prod_id, s.prod_name, s.status, s.country_code)
+
+  	--update
+  	when	matched and s.cust_name <> d.cust_name or s.cust_add <> d.cust_add or
+  			s.cust_state <> d.cust_state or s.cust_zipcode <> d.cust_zipcode or
+  			s.br_id <> d.br_id or s.prod_id <> d.prod_id or s.prod_name <> d.prod_name or
+  			s.status <> d.status or s.country_code <> d.country_code
+  	then
+  	update
+  	set	d.cust_name = s.cust_name, d.cust_add = s.cust_add, d.cust_state = s.cust_state,
+  		d.cust_zipcode = s.cust_zipcode, d.br_id = s.br_id, d.prod_id = s.prod_id,
+  		d.prod_name = s.prod_name, d.status = s.status, d.country_code = s.country_code;
+  end
+  ```
