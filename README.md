@@ -573,3 +573,4 @@ go` in 'SQLStatement' -> Ok -> Ok
   		d.prod_name = s.prod_name, d.status = s.status, d.country_code = s.country_code;
   end
   ```
+  
