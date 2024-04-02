@@ -4,6 +4,7 @@
 - [Tools Used](#tools-used)
 - [SSIS for Stage Database (SQL Server Integration Service)](#ssis-for-stage-database-sql-server-integration-service)
 - [SSIS for Data Warehouse Database (SQL Server Integration Service)](#ssis-for-data-warehouse-database-sql-server-integration-service)
+- [SSIS Deployment](#ssis-deployment)
 
 ### Overview
 - This is a daily bank operation project.
@@ -507,7 +508,7 @@ go` in 'SQLStatement' -> Ok -> Ok
   as
   begin
   	--Incremental Insert
-  		--select columns that we need to for dimension table
+  		--select columns that we need for dimension table
   	insert into dim_account
   	select	a.acc_id, a.cust_name, a.cust_add, a.cust_state, a.cust_zipcode, a.br_id,
   			a.prod_id, p.prod_name, a.status, 91 as 'country_code'
@@ -573,4 +574,12 @@ go` in 'SQLStatement' -> Ok -> Ok
   		d.prod_name = s.prod_name, d.status = s.status, d.country_code = s.country_code;
   end
   ```
-  
+
+### SSIS Deployment
+- DEV tasks
+  - Create a SSIS Package / Perform Unit Testing
+  - Implement Logging in SSIS
+    - Extensions -> SSIS -> Logging -> tick the 'Containers' from left box -> click add 'SSIS log provider for SQL Server' and 'SSIS log provider for Windows Event Log' in 'Providers and Logs' tab -> tick previous two log below -> select a server for 'SSIS log provider for SQL Server' in 'Configuration' -> in 'Details' tab selects 'OnError' & 'OnPostExecute' & 'OnTaskFailed' -> OK
+    - Event Handler (Customized Logging)
+  - Build and CheckIn the Code to VSTF / TFS
+    - right click on project name and click on 'Build' to find any issue with the project -> now go to project path '<drive>:\<path>\bin\Development' there must be an .ispac file, this file having all the packages -> and upload this .ispac file to VSTF/TFS server -> now you have to give deployment guide as .txt or .docx file
