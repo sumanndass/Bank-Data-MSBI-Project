@@ -582,4 +582,33 @@ go` in 'SQLStatement' -> Ok -> Ok
     - Extensions -> SSIS -> Logging -> tick the 'Containers' from left box -> click add 'SSIS log provider for SQL Server' and 'SSIS log provider for Windows Event Log' in 'Providers and Logs' tab -> tick previous two log below -> select a server for 'SSIS log provider for SQL Server' in 'Configuration' -> in 'Details' tab selects 'OnError' & 'OnPostExecute' & 'OnTaskFailed' -> OK
     - Event Handler (Customized Logging)
   - Build and CheckIn the Code to VSTF / TFS
-    - right click on project name and click on 'Build' to find any issue with the project -> now go to project path 'D:\Books\MSBI\Project\ssis_bank_dw\bin\Development' there must be an .ispac file, this file having all the packages -> and upload this .ispac file to VSTF/TFS server -> now you have to give deployment guide as .txt or .docx file
+    - right click on project name and click on 'Build' to find any issue with the project -> now go to project path 'D:\Books\MSBI\Project\ssis_bank_dw\bin\Development' there must be an .ispac file, this file having all the packages -> and upload this .ispac file to VSTF/TFS server -> now you have to give deployment guide as .txt or .docx file like
+      'Project Name:
+      Author:
+      Purpose:
+
+      Steps:
+      1. go to VSTF server and download <name> folder and its content
+      2. go to DWH and open SQL Server
+      3. right click on integration service catalogs and choose create a catalog
+      4. right click on SSISDB and choose folder
+      5. name = bank and ok
+      6. double click on .ispac file
+      7. Next
+      8. choose 'SSIS in SQL Server' and Next
+      9. select Server
+      10. click on ‘Connect’
+      11. Browse for the folder
+      12. Next
+      13. Deploy
+      14. Close'
+- DBA tasks
+  - Download all files from VSTF/TFS server to DWH server
+  - Create Integration Services Catalogs in SQL Server of DWH
+    - open SSMS -> right click on 'Integration Service Catalogs' -> click on 'Create Catalog' -> click on 'Enable CLR Integration' -> enter password '12345' or anything you want -> OK -> now click on SSISDB and click on 'Create Folder' -> put name -> OK
+  - Deploy the package using ispac file
+    - double click on .ispac file -> next -> choose 'SSIS in SQL Server' and ‘Next’ -> put 'Server Name' as '.' -> click on 'Connect' -> now 'Browse' for the folder which was created in SSMS Integration Service Catalogs -> select the folder and change the name as you wish in 'Path' -> Next -> click on 'Deploy' -> Close
+    - now go to SSMS and refresh 'Integration Service Catalogs' -> and all the packages will be there in the folder which was created earlier -> now create a document what the packages are doing
+    - in real life all the servers will be different so in that case we need to configure the connections -> go to SSMS and open the folder in 'Integration Service Catalogs' -> right click on packages and click on 'Configure' -> go to 'Connection Manager' tab -> change server name -> click on 3 dots -> click on 'Edit values' and enter server address -> ok -> ok -> right click on packages and click on 'Execute' -> ok, this will execute the task -> click 'Yes' to report the task -> report will generate and also you can find the SQL Server logging in System Table in Server (Stage_company -> Tables -> System Tables)
+  - Schedule a Package Using SQL Server Jobs
+    - to schedule task -> go to 'SQL Server Agent' and start it by right -> expand it and right click on 'Jobs' -> click on 'New Job' -> put job name 'job_forloop' in 'General' tab -> click on 'Steps' tab -> click on 'New' -> put 'Step Name' -> select type 'SQL Server Integration Services Packages' -> now in below 'Package' tab choose 'SSIS Catalog' in 'Package source' -> put 'Server' -> now click on 3 dots in 'Package' and choose one package -> ok -> now go to 'Schedule' tab -> click on 'New' -> put 'Name' -> choose 'Occurs' as daily, weekly, monthly -> click on 'Occurs once at' and put time -> ok -> ok -> now task will automatically run at 01:00AM daily or you can run the same at any time -> right click on the task and click on 'Start job at step' -> and you can watch the logging, by double clicking on 'Job Activity Monitor'
