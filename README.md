@@ -88,62 +88,62 @@
     - double click on it
     - select the 'Available Input Columns'
     - change the 'Data Type' and 'Length' - Ok
-<br> -> drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from 'Data Conversion' to 'OLE DB Destination'
-       	<br> &emsp; -> double click on it
-   	<br> &emsp; -> in 'connection Manager' select 'dest.bank_stage' (which was saved earlier) in 'OLE DB Connection manager'
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
-  	<br> &emsp; -> select 'New' in 'Name of the table or the view'
-    	<br> &emsp; -> change table name to 'branch_stage' and change data type if needed -> Ok
-      	<br> &emsp; -> now click on 'Mappings' choose proper 'Input Column' and 'Destination Column' -> Ok
-<br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
-<br> -> stage table always needs fresh data
-<br> -> so, drag 'Execute SQL Task' in 'Control Flow'
-     	<br> &emsp; -> double click on it
-       	<br> &emsp; -> in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-       	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
-  	<br> &emsp; -> connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
-       	<br> &emsp; -> 'Start' the project
-  	<br> &emsp; -> do the same for 'staff_doc' and 'product_doc' packages
+  - drag 'OLE DB Destination'
+    - connect 'blue pipe' from 'Data Conversion' to 'OLE DB Destination'
+    - double click on it
+    - in 'connection Manager' select 'dest.bank_stage' (which was saved earlier) in 'OLE DB Connection manager'
+    - select 'Data access mode' as 'Table or view - fast load'
+    - select 'New' in 'Name of the table or the view'
+    - change table name to 'branch_stage' and change data type if needed - Ok
+    - now click on 'Mappings' choose proper 'Input Column' and 'Destination Column' - Ok
+  - change names in 'Connection Managers' for better understanding - right click on it and 'Convert to Package Connection' for rest of the project
+  - stage table always needs fresh data
+  - so, drag 'Execute SQL Task' in 'Control Flow'
+    - double click on it
+    - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
+    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes - Ok
+    - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
+    - 'Start' the project
+    - do the same for 'staff_doc' and 'product_doc' packages
 
 - **SSIS Logging (To know about the status of the successful loadings)**
-  <br> create a SSIS logging table named 'ssis_log' (where SSIS status will store)
-  ```sql
-  create table ssis_log
-  (
-  	id			int		primary key identity(1, 1),
-  	pkg_name		varchar(100)	not null,
-  	pkg_exec_time		datetime	not null,
-  	row_cnt			int		not null,
-  	pkg_exec_status		varchar(100)	not null
-  )
-  ```
-  <br> now we will store SSIS loading status in newly created table
-  <br> -> open 'account_db' package and drag 'Execute SQL Task' in 'Control Flow'
-  <br> -> double click on it
-  <br> -> in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-  <br> -> add 'SQLStatement' command (`insert into ssis_log values(?, getdate(), ?, 'Success...')`)
-  <br> -> in 'Parameter Mapping' click on 'Add' and choose 'System::PackageName' in 'Variable Name' for first '?' means 0th position
-  <br> -> choose 'Varchar' as 'Data type', choose '0' in 'Parameter Name' for the 0th position '?', choose '-1' for 'Parameter Size' -> Ok
-  <br> -> now click on 'Variables' and select 'Add variable' -> choose 'Name' like: 'row_cnt'
-  <br> -> now in 'Data Flow', drag 'Row Count'
-  <br> -> connect 'blue pipe' from 'OLE DB Source' to 'Row Count'
-  <br> -> double click on 'Row Count' and select the 'User::row_cnt' variable
-  <br> -> connect 'blue pipe' from 'Row Count' to 'OLE DB Destination'
-  <br> -> now in 'Control Flow', double click on newly created 'Execute SQL Task'
-  <br> -> in 'Parameter Mapping' click on 'Add' and choose 'User::row_cnt' in 'Variable Name' for second '?' means 1st position
-  <br> -> choose 'Large_integer' as 'Data type', choose '1' in 'Parameter Name' for the 1st position '?', choose '-1' for 'Parameter Size' -> Ok
-  <br> -> connect 'green pipe' from 'Data Flow Task' to new 'Execute SQL Task 1'
-  <br> -> 'Start' the project
-  <br> -> do the same for 'transaction_db', 'branch_doc', 'staff_doc', 'product_doc' packages
+  - create a SSIS logging table named 'ssis_log' (where SSIS status will store)
+    ```sql
+      create table ssis_log
+      (
+      	id			int		primary key identity(1, 1),
+      	pkg_name		varchar(100)	not null,
+      	pkg_exec_time		datetime	not null,
+      	row_cnt			int		not null,
+      	pkg_exec_status		varchar(100)	not null
+      )
+      ```
+  - now we will store SSIS loading status in newly created table
+    - open 'account_db' package and drag 'Execute SQL Task' in 'Control Flow'
+    - double click on it
+    - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
+    - add 'SQLStatement' command (`insert into ssis_log values(?, getdate(), ?, 'Success...')`)
+    - in 'Parameter Mapping' click on 'Add' and choose 'System::PackageName' in 'Variable Name' for first '?' means 0th position
+    - choose 'Varchar' as 'Data type', choose '0' in 'Parameter Name' for the 0th position '?', choose '-1' for 'Parameter Size' - Ok
+    - now click on 'Variables' and select 'Add variable' - choose 'Name' like: 'row_cnt'
+    - now in 'Data Flow', drag 'Row Count'
+    - connect 'blue pipe' from 'OLE DB Source' to 'Row Count'
+    - double click on 'Row Count' and select the 'User::row_cnt' variable
+    - connect 'blue pipe' from 'Row Count' to 'OLE DB Destination'
+    - now in 'Control Flow', double click on newly created 'Execute SQL Task'
+    - in 'Parameter Mapping' click on 'Add' and choose 'User::row_cnt' in 'Variable Name' for second '?' means 1st position
+    - choose 'Large_integer' as 'Data type', choose '1' in 'Parameter Name' for the 1st position '?', choose '-1' for 'Parameter Size' - Ok
+    - connect 'green pipe' from 'Data Flow Task' to new 'Execute SQL Task 1'
+    - 'Start' the project
+    - do the same for 'transaction_db', 'branch_doc', 'staff_doc', 'product_doc' packages
 
 - **SSIS Failure Logging (To know about the failure happened in loading)**
-  <br> -> double click on desired package -> go to 'Extension' -> 'SSIS' -> 'Logging'
-  <br> -> choose all 'Containers:' -> 'Add' 'SSIS log provider for SQL Server', tick the same and choose the destination server 'bank_stage' in 'Configuration' -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
-  <br> -> Find the error logs in system tables in the selected database by using command `sql select * from sysssislog`
-  <br> -> again, choose all 'Containers:' -> add 'SSIS log provider for Windows Event Log', tick the same -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
-  <br> -> Find the error logs in 'Windows Event Viewer' -> 'Windows Logs' -> 'Application'
-  <br> -> Set this task for other packages also
+  - double click on desired package - go to 'Extension' - 'SSIS' - 'Logging'
+  - choose all 'Containers:' - 'Add' 'SSIS log provider for SQL Server', tick the same and choose the destination server 'bank_stage' in 'Configuration' - go to 'Details' and tick 'OnError' and 'OnTaskFailed'
+  - Find the error logs in system tables in the selected database by using command `sql select * from sysssislog`
+  - again, choose all 'Containers:' - add 'SSIS log provider for Windows Event Log', tick the same - go to 'Details' and tick 'OnError' and 'OnTaskFailed'
+  - Find the error logs in 'Windows Event Viewer' - 'Windows Logs' - 'Application'
+  - Set this task for other packages also
 
 ### SSIS for Data Warehouse Database (SQL Server Integration Service)
 - **Create Data Warehouse Database**
@@ -156,14 +156,14 @@
   ```
 
 - **Create Dimension and Fact table in DWH**
-  <br> As in OLAP/DWH we need to denormalized dimension tables and extract facts, so
-  <br> we merged account_table and product_table
-  <br> we merged branch_table and region_table
-  <br> we merged transaction_table and staff_table
-  <br> we created a new dimension date table
-  <br> we created a new dimension location table
-  <br> we extracted facts from account table and created a new fact table
-  <br> we extracted facts from transaction table and created a new fact table
+  - As in OLAP/DWH we need to denormalized dimension tables and extract facts, so
+  - we merged account_table and product_table
+  - we merged branch_table and region_table
+  - we merged transaction_table and staff_table
+  - we created a new dimension date table
+  - we created a new dimension location table
+  - we extracted facts from account table and created a new fact table
+  - we extracted facts from transaction table and created a new fact table
 
   ```sql
   create table dim_date
