@@ -43,51 +43,51 @@
 	<br> Control Flow - Non-ETL Activities
 
 - **Data Loading to 'bank_stage' Database from 'bank' Database**
-  <br> -> double click on 'account_db' SSIS Packages
-  <br> -> drag 'Data Flow Task' in 'Control Flow' section
-  <br> -> double click on 'Data Flow Task'
-  <br> -> drag 'OLE DB Source'
-     	<br> &emsp; -> double click on it
-  	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
-  	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank' in 'Initial catalog' -> Ok -> Ok
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view'
-  	<br> &emsp; -> choose '[dbo].[account_table]' from 'Name of the table or the view' -> Ok
-  <br> -> drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from source to destination
-       	<br> &emsp; -> double click on it
-   	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
-  	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' -> Ok -> Ok
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
-  	<br> &emsp; -> select 'New' in 'Name of the table or the view'
-    	<br> &emsp; -> change table name to 'account_stage' and change data type if needed -> Ok
-      	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
-  <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
-  <br> -> stage table always needs fresh data
-  <br> -> so, drag 'Execute SQL Task' in 'Control Flow'
-     	<br> &emsp; -> double click on it
-       	<br> &emsp; -> in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-       	<br> &emsp; -> add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
-  	<br> &emsp; -> connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
-       	<br> &emsp; -> 'Start' the project
-  	<br> &emsp; -> do the same for 'transaction_db' and 'region_db' package
+  - double click on 'account_db' SSIS Packages
+  - drag 'Data Flow Task' in 'Control Flow' section
+  - double click on 'Data Flow Task'
+  - drag 'OLE DB Source'
+    - double click on it
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' - Ok
+    - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
+    - put 'Server or file name' as '.' -> select database name 'bank' in 'Initial catalog' - Ok - Ok
+    - select 'Data access mode' as 'Table or view'
+    - choose '[dbo].[account_table]' from 'Name of the table or the view' - Ok
+  - drag 'OLE DB Destination'
+    - connect 'blue pipe' from source to destination
+    - double click on it
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' - Ok
+    - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
+    - put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' - Ok - Ok
+    - select 'Data access mode' as 'Table or view - fast load'
+    - select 'New' in 'Name of the table or the view'
+    - change table name to 'account_stage' and change data type if needed - Ok
+    - now click on 'Mappings' to check source and destination column and data type are corrected or not - Ok
+  - change names in 'Connection Managers' for better understanding - right click on it and 'Convert to Package Connection' for rest of the project
+  - stage table always needs fresh data
+  - so, drag 'Execute SQL Task' in 'Control Flow'
+    - double click on it
+    - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
+    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes - Ok
+    - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
+    - 'Start' the project
+    - do the same for 'transaction_db' and 'region_db' package
 
 - **Data Loading to 'bank_stage' Database from 'Excel' Document**
-<br> -> double click on 'branch_doc' SSIS Packages
-<br> -> drag 'Data Flow Task' in 'Control Flow' section
-<br> -> double click on 'Data Flow Task'
-<br> -> drag 'Excel Source'
-     	<br> &emsp; -> double click on it
-  	<br> &emsp; -> in 'connection Manager' select 'New'
-  	<br> &emsp; -> find the 'excel' document path and choose the same and select proper 'Excel version' -> Ok
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view'
-  	<br> &emsp; -> choose 'branch$' from 'Name of the Excel sheet' -> Ok
-<br> -> drag 'Data Conversion'
-     	<br> &emsp; -> connect 'blue pipe' from 'Excel Source' to 'Data Conversion'
-     	<br> &emsp; -> double click on it
-     	<br> &emsp; -> select the 'Available Input Columns'
-     	<br> &emsp; -> change the 'Data Type' and 'Length' -> Ok
+  - double click on 'branch_doc' SSIS Packages
+  - 'Data Flow Task' in 'Control Flow' section
+  - double click on 'Data Flow Task'
+  - drag 'Excel Source'
+    - double click on it
+    - in 'connection Manager' select 'New'
+    - find the 'excel' document path and choose the same and select proper 'Excel version' - Ok
+    - select 'Data access mode' as 'Table or view'
+    - choose 'branch$' from 'Name of the Excel sheet' - Ok
+  - drag 'Data Conversion'
+    - connect 'blue pipe' from 'Excel Source' to 'Data Conversion'
+    - double click on it
+    - select the 'Available Input Columns'
+    - change the 'Data Type' and 'Length' - Ok
 <br> -> drag 'OLE DB Destination'
    	<br> &emsp; -> connect 'blue pipe' from 'Data Conversion' to 'OLE DB Destination'
        	<br> &emsp; -> double click on it
