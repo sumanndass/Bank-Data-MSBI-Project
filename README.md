@@ -583,11 +583,10 @@ go` in 'SQLStatement' -> Ok -> Ok
     - Event Handler (Customized Logging)
   - Build and CheckIn the Code to VSTF / TFS
     - right click on project name and click on 'Build' to find any issue with the project -> now go to project path 'D:\Books\MSBI\Project\ssis_bank_dw\bin\Development' there must be an .ispac file, this file having all the packages -> and upload this .ispac file to VSTF/TFS server -> now you have to give deployment guide as .txt or .docx file like
-      'Project Name:
-      Author:
-      Purpose:
-
-      Steps:
+      <br> 'Project Name:
+      <br> Author:
+      <br> Purpose:
+      <br> Steps:
       1. go to VSTF server and download <name> folder and its content
       2. go to DWH and open SQL Server
       3. right click on integration service catalogs and choose create a catalog
