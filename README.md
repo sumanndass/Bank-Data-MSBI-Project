@@ -32,11 +32,11 @@
   ```
 
 - **Create SSIS Project**
-  Create SSIS project using 'Integration Service Project' in DevEnv
+  - Create SSIS project using 'Integration Service Project' in DevEnv
 
 - **Create SSIS Package for Stage Server**
-<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
-<br> we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named 'account_db', 'transaction_db', 'region_db', 'branch_doc', 'staff_doc', 'product_doc'.
+  - open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+    - we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named 'account_db', 'transaction_db', 'region_db', 'branch_doc', 'staff_doc', 'product_doc'.
 
 	**Remember**
   <br> Data Flow - ETL Activities
