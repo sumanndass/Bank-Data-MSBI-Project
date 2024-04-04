@@ -5,6 +5,7 @@
 - [SSIS for Stage Database (SQL Server Integration Service)](#ssis-for-stage-database-sql-server-integration-service)
 - [SSIS for Data Warehouse Database (SQL Server Integration Service)](#ssis-for-data-warehouse-database-sql-server-integration-service)
 - [SSIS Deployment](#ssis-deployment)
+- [SSAS Create Cube](#ssas-create-cube)
 
 ### Overview
 - This is a daily bank operation project.
@@ -16,7 +17,7 @@
 ### Tools Used
 - SQL Server - Data Analysis, Data Cleaning
 - SSIS - Extract, Transform, Loading
-- SSAS - 
+- SSAS - Cube, Pre aggregating values
 - SSRS -
 
 ### SSIS for Stage Database (SQL Server Integration Service)
@@ -31,7 +32,7 @@
   ```
 
 - **Create SSIS Project**
-<br> Create SSIS project using 'Integration Service Project' in DevEnv
+  Create SSIS project using 'Integration Service Project' in DevEnv
 
 - **Create SSIS Package for Stage Server**
 <br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
@@ -611,3 +612,7 @@ go` in 'SQLStatement' -> Ok -> Ok
     - in real life all the servers will be different so in that case we need to configure the connections -> go to SSMS and open the folder in 'Integration Service Catalogs' -> right click on packages and click on 'Configure' -> go to 'Connection Manager' tab -> change server name -> click on 3 dots -> click on 'Edit values' and enter server address -> ok -> ok -> right click on packages and click on 'Execute' -> ok, this will execute the task -> click 'Yes' to report the task -> report will generate and also you can find the SQL Server logging in System Table in Server (Stage_company -> Tables -> System Tables)
   - Schedule a Package Using SQL Server Jobs
     - to schedule task -> go to 'SQL Server Agent' and start it by right -> expand it and right click on 'Jobs' -> click on 'New Job' -> put job name 'job_forloop' in 'General' tab -> click on 'Steps' tab -> click on 'New' -> put 'Step Name' -> select type 'SQL Server Integration Services Packages' -> now in below 'Package' tab choose 'SSIS Catalog' in 'Package source' -> put 'Server' -> now click on 3 dots in 'Package' and choose one package -> ok -> now go to 'Schedule' tab -> click on 'New' -> put 'Name' -> choose 'Occurs' as daily, weekly, monthly -> click on 'Occurs once at' and put time -> ok -> ok -> now task will automatically run at 01:00AM daily or you can run the same at any time -> right click on the task and click on 'Start job at step' -> and you can watch the logging, by double clicking on 'Job Activity Monitor'
+
+### SSAS Create Cube
+- Create SSAS Project
+  - 
