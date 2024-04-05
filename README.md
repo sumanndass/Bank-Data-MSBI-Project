@@ -614,5 +614,79 @@ go` in 'SQLStatement' -> Ok -> Ok
     - to schedule task -> go to 'SQL Server Agent' and start it by right -> expand it and right click on 'Jobs' -> click on 'New Job' -> put job name 'job_forloop' in 'General' tab -> click on 'Steps' tab -> click on 'New' -> put 'Step Name' -> select type 'SQL Server Integration Services Packages' -> now in below 'Package' tab choose 'SSIS Catalog' in 'Package source' -> put 'Server' -> now click on 3 dots in 'Package' and choose one package -> ok -> now go to 'Schedule' tab -> click on 'New' -> put 'Name' -> choose 'Occurs' as daily, weekly, monthly -> click on 'Occurs once at' and put time -> ok -> ok -> now task will automatically run at 01:00AM daily or you can run the same at any time -> right click on the task and click on 'Start job at step' -> and you can watch the logging, by double clicking on 'Job Activity Monitor'
 
 ### SSAS Create Cube
-- Create SSAS Project
-  - 
+- **Create SSAS Project**
+  - Create SSAS project using 'Analysis Services Multidimensional Project' in DevEnv
+    **Remember**
+    <br> Multidimensional - for more data, save in disk, slow performace, use MDX
+    <br> Tabular - for few GB of data, save in RAM, fast performace, use DAX
+
+- **Create Data Source**
+  - right click on 'Data Sources'
+  - select 'New Data Source'
+  - Next
+  - new
+  - change provider from 'Native OLE DB' to 'Microsoft OLE DB Driver for SQL Server'
+  - enter 'Server or file name' or '.'
+  - select or enter a database name in 'Initial catalog'
+  - check 'Test Connection' - ok - ok
+  - next
+  - select the 'Use the service account'
+  - next
+  - enter data source name 'ds_bank_dw'
+  - finish
+  
+- **Create Data Source View**
+  - right click on 'Data Source Views'
+  - select ‘New Data Source View’
+  - next
+  - select data source from 'Relational Data Sources'
+  - next
+  - select fact tables first
+  - click on ‘Add Related Tables’ to select all other tables related to fact tables
+  - next
+  - enter name 'dsv_bank_dw'
+  - finish
+  - match the relationships if needed
+  - basically, you need to create multiple view as per your requirements and on the basis of view you will create cubes
+
+- **Create Cube**
+  - right click on 'Cubes'
+  - select 'New Cube'
+  - next
+  - choose 'Use existing tables’
+  - next
+  - now select only fact/measure tables
+  - next
+  - now select only fact/measures as per your requirement or select all measures
+  - next
+  - now select dimensions as per your requirement or select all dimensions
+  - next
+  - now enter 'Cube name:' as 'cube_bank_dw'
+  - finish
+
+- **Build Dimension**
+  - Dimensions will automatically create when cube is formed
+  
+- **Create Calc**
+
+- **Deploy the Cube**
+  - right click on project in solution explorer
+  - go to 'Properties'
+  - select 'Deployment'
+  - enter 'Server' name or '.'
+  - enter 'Database' name or 'cube_bank_dw'
+  - Apply - Ok
+  - now again right click on project in solution explorer
+  - select 'Build'
+  - now again right click on project in solution explorer
+  - select 'Process' - yes
+  - process options ‘process full’
+  - run - close - close
+  - browser
+  - reconnect
+- click on 'Browser' (to see all the aggregations)
+-- to view new items -> double click on dimensions in solution explorer -> drag items from ‘data source view’ to ‘attributes’ -> is hierarchy is needed then drag items from ‘attributes’ to ‘hierarchies’ -> enter name of the hierarchy -> save -> ok -> if we need, we can create more hierarchies
+-- now again rebuild and process the cube if any changes are done
+-- now go to browser and refresh or reconnect the cube
+-- now you can use this cube
+-- excel -> data -> from database -> from analysis services -> enter server name or . -> log on credential ‘use windows authentication’ -> next -> select cube -> next -> finish -> ok -> now do anything as your wish
