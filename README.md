@@ -250,46 +250,41 @@
   ```
 
 - **Create Reference Tables/Views in DWH**
-  <br> As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data.
-  <br> We will use referencee table becuase we will use more options in SSIS. By the way, below reference views also can be used for data fetching from bank_stage to bank_dw.
- 
-  <br> reference view because account_table and product_table merged
-  ```sql
-  create view vw_ref_dim_account
-  as
-  select a.acc_id, a.cust_name, a.cust_add, a.cust_state,
-  a.cust_zipcode, a.br_id, a.prod_id, p.prod_name, a.status
-  from bank.dbo.account_table a join bank.dbo.product_table p on a.prod_id = p.prod_id
-  ```
+  - As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data.
+  - We will use referencee table becuase we will use more options in SSIS. By the way, below reference views also can be used for data fetching from bank_stage to bank_dw.
+  
+  - reference view because account_table and product_table merged
+    ```sql
+    create view vw_ref_dim_account
+    as
+    select a.acc_id, a.cust_name, a.cust_add, a.cust_state,
+    a.cust_zipcode, a.br_id, a.prod_id, p.prod_name, a.status
+    from bank.dbo.account_table a join bank.dbo.product_table p on a.prod_id = p.prod_id
+    ```
+  - reference view because branch_table and region_table merged
+    ```sql
+    create view vw_ref_dim_branch
+    as
+    select b.br_id, b.br_name, b.br_add, b.br_state, b.br_zipcode, r.reg_id, r.reg_name
+    from bank.dbo.branch_table b join bank.dbo.region_table r on b.reg_id = r.reg_id
+    ```
+  - reference view because transaction_table and staff_table merged
+    ```sql
+    create view vw_ref_dim_transaction
+    as
+    select t.tran_id, t.acc_id, t.br_id, t.txn_type, t.chq_no, t.chq_date, t.staff_id, s.staff_name, s.designation
+    from bank.dbo.transaction_table t join bank.dbo.staff_table s on t.staff_id = s.staff_id
+    ```
+  - populate new date dimension table dim_date
+    ```sql
+    declare @startdate datetime
+    declare @enddate datetime = getdate()
+    select @startdate = cast(min(doo) as date) from bank.dbo.account_table
 
-  <br> reference view because branch_table and region_table merged
-  ```sql
-  create view vw_ref_dim_branch
-  as
-  select b.br_id, b.br_name, b.br_add, b.br_state, b.br_zipcode, r.reg_id, r.reg_name
-  from bank.dbo.branch_table b join bank.dbo.region_table r on b.reg_id = r.reg_id
-  ```
-
-  <br> reference view because transaction_table and staff_table merged
-  ```sql
-  create view vw_ref_dim_transaction
-  as
-  select t.tran_id, t.acc_id, t.br_id, t.txn_type, t.chq_no, t.chq_date, t.staff_id,
-  s.staff_name, s.designation
-  from bank.dbo.transaction_table t join bank.dbo.staff_table s on t.staff_id = s.staff_id
-  ```
-
-  <br> populate new date dimension table dim_date
-  ```sql
-  declare @startdate datetime
-  declare @enddate datetime = getdate()
-
-  select @startdate = cast(min(doo) as date) from bank.dbo.account_table
-
-  while @startdate <= @enddate
-  begin
-  	insert into dim_date values
-  	(
+    while @startdate <= @enddate
+    begin
+    	insert into dim_date values
+    	(
   		cast(format(@startdate, 'ddMMyyyy') as int),
   		@startdate,
   		year(@startdate),
@@ -302,62 +297,60 @@
   			when month(@startdate) in (4, 5, 6) then 2
   			when month(@startdate) in (7, 8, 9) then 3
   			when month(@startdate) in (10, 11, 12) then 4
-  	   end,
-  	   month(@startdate),
-  	   datename(mm, @startdate),
-  	   datepart(ww, @startdate),
-  	   day(@startdate),
-  	   datename(dw, @startdate)
+  	   	end,
+    		month(@startdate),
+  	   	datename(mm, @startdate),
+  	   	datepart(ww, @startdate),
+  	   	day(@startdate),
+  	   	datename(dw, @startdate)
   	)
 
   	set @startdate = dateadd(dd, 1, @startdate)
-  end
-  ```
-  
-  <br> populate new dimension location table dim_location
-  ```sql
-  insert into dim_location values
-  (1, 'India', 'Andhra Pradesh', 'Visakhapatnam'),
-  (2, 'India', 'Arunachal Pradesh', 'Itanagar'),
-  (3, 'India', 'Assam', 'Guwahati'),
-  (4, 'India', 'Bihar', 'Patna'),
-  (5, 'India', 'Chhattisgarh', 'Raipur'),
-  (6, 'India', 'Delhi', 'New Delhi'),
-  (7, 'India', 'Goa', 'Vasco da Gama'),
-  (8, 'India', 'Gujarat', 'Ahmedabad'),
-  (9, 'India', 'Haryana', 'Faridabad'),
-  (10, 'India', 'Himachal Pradesh', 'Shimla'),
-  (11, 'India', 'Jharkhand', 'Jamshedpur'),
-  (12, 'India', 'Karnataka', 'Bengaluru'),
-  (13, 'India', 'Kerala', 'Kochi'),
-  (14, 'India', 'Madhya Pradesh', 'Indore'),
-  (15, 'India', 'Maharashtra', 'Mumbai'),
-  (16, 'India', 'Manipur', 'Imphal'),
-  (17, 'India', 'Meghalaya', 'Shillong'),
-  (18, 'India', 'Mizoram', 'Aizawl'),
-  (19, 'India', 'Nagaland', 'Dimapur'),
-  (20, 'India', 'Odisha', 'Bhubaneswar'),
-  (21, 'India', 'Punjab', 'Ludhiana'),
-  (22, 'India', 'Rajasthan', 'Jaipur'),
-  (23, 'India', 'Sikkim', 'Gangtok'),
-  (24, 'India', 'Tamil Nadu', 'Chennai'),
-  (25, 'India', 'Telangana', 'Hyderabad'),
-  (26, 'India', 'Tripura', 'Agartala'),
-  (27, 'India', 'Uttar Pradesh', 'Lucknow'),
-  (28, 'India', 'Uttarakhand', 'Dehradun'),
-  (29, 'India', 'West Bengal', 'Kolkata')
-  ```
-
-  <br> we have 7 dimension tables and 2 fact tables. So, we need to create 7 packages, named 'DWH_Load_dim_branch', 'DWH_Load_dim_account', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' and 2 derived dimension tables ('dim_date' and 'dim_location') are already loaded.
+    end
+    ``` 
+  - populate new dimension location table dim_location
+    ```sql
+    insert into dim_location values
+    (1, 'India', 'Andhra Pradesh', 'Visakhapatnam'),
+    (2, 'India', 'Arunachal Pradesh', 'Itanagar'),
+    (3, 'India', 'Assam', 'Guwahati'),
+    (4, 'India', 'Bihar', 'Patna'),
+    (5, 'India', 'Chhattisgarh', 'Raipur'),
+    (6, 'India', 'Delhi', 'New Delhi'),
+    (7, 'India', 'Goa', 'Vasco da Gama'),
+    (8, 'India', 'Gujarat', 'Ahmedabad'),
+    (9, 'India', 'Haryana', 'Faridabad'),
+    (10, 'India', 'Himachal Pradesh', 'Shimla'),
+    (11, 'India', 'Jharkhand', 'Jamshedpur'),
+    (12, 'India', 'Karnataka', 'Bengaluru'),
+    (13, 'India', 'Kerala', 'Kochi'),
+    (14, 'India', 'Madhya Pradesh', 'Indore'),
+    (15, 'India', 'Maharashtra', 'Mumbai'),
+    (16, 'India', 'Manipur', 'Imphal'),
+    (17, 'India', 'Meghalaya', 'Shillong'),
+    (18, 'India', 'Mizoram', 'Aizawl'),
+    (19, 'India', 'Nagaland', 'Dimapur'),
+    (20, 'India', 'Odisha', 'Bhubaneswar'),
+    (21, 'India', 'Punjab', 'Ludhiana'),
+    (22, 'India', 'Rajasthan', 'Jaipur'),
+    (23, 'India', 'Sikkim', 'Gangtok'),
+    (24, 'India', 'Tamil Nadu', 'Chennai'),
+    (25, 'India', 'Telangana', 'Hyderabad'),
+    (26, 'India', 'Tripura', 'Agartala'),
+    (27, 'India', 'Uttar Pradesh', 'Lucknow'),
+    (28, 'India', 'Uttarakhand', 'Dehradun'),
+    (29, 'India', 'West Bengal', 'Kolkata')
+    ```
+  - we have 7 dimension tables and 2 fact tables. So, we need to create 7 packages, named 'DWH_Load_dim_branch', 'DWH_Load_dim_account', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' and 2 derived dimension tables ('dim_date' and 'dim_location') are already loaded.
 
 - **Create SSIS Package for DWH Server**
-<br> open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
+  - open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
 
 - **Data Loading to 'bank_dw' Database from 'bank_stage' Database**
-  <br> -> double click on 'DWH_Load_dim_account' SSIS Packages
-  <br> -> drag 'Data Flow Task' in 'Control Flow' section
-  <br> -> double click on 'Data Flow Task'
-  <br> -> drag 'OLE DB Source'
+  - double click on 'DWH_Load_dim_account' SSIS Packages
+  - drag 'Data Flow Task' in 'Control Flow' section
+  - double click on 'Data Flow Task'
+  - drag 'OLE DB Source'
      	<br> &emsp; -> double click on it
   	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
   	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
