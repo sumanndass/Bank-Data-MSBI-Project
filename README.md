@@ -384,14 +384,14 @@
   - do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
   - now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
   - however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
-  
+  <br> &emsp;
   - Incremental loading using 'Lookup'
     - we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
-  - double click on 'DWH_Load_dim_account'
-  - drag 'Lookup' just before 'OLE DB Destination' i.e., data loading
-    - connect 'blue pipe' from 'Derived Column' to 'Lookup1'
-    - double click on it
-    - choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
+    - double click on 'DWH_Load_dim_account'
+    - drag 'Lookup' just before 'OLE DB Destination' i.e., data loading
+      - connect 'blue pipe' from 'Derived Column' to 'Lookup1'
+      - double click on it
+      - choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
     - in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
     - in 'Columns' drag 'acc_id' of 'Available Input Columns' on 'acc_id' of 'Available Lookup Columns' and tick desired column 'prod_name' -> Ok
     - now, drag 'OLE DB Destination'
