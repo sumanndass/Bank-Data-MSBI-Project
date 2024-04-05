@@ -6,42 +6,42 @@
 - [SSIS for Data Warehouse Database (SQL Server Integration Service)](#ssis-for-data-warehouse-database-sql-server-integration-service)
 - [SSIS Deployment](#ssis-deployment)
 - [SSAS Create Cube](#ssas-create-cube)
-
+<br>
 ### Overview
 - This is a daily bank operation project.
 - Assume daily few data are storing in 'bank' database and the tables are 'account_table' and 'transaction_table'.
 - Also, few data are storing in 'product_doc' excel file.
 - Also, few data are storing in 'branch_staff_doc' excel file and sheets are 'branch' and 'staff'.
 - We need to load the data from 'bank' and 'bank_doc' to 'bank_stage' database and perform ETL operation on the same.
-
+<br>
 ### Tools Used
 - SQL Server - Data Analysis, Data Cleaning
 - SSIS - Extract, Transform, Loading
 - SSAS - Cube, Pre aggregating values
 - SSRS -
-
+<br>
 ### SSIS for Stage Database (SQL Server Integration Service)
 - **create a stage database named 'bank_stage' (where ETL will happen)**
   ```sql
   create database bank_stage
   ```
-
+<br>
 - **use the 'bank_stage' database**
   ```sql
   use bank_stage
   ```
-
+<br>
 - **Create SSIS Project**
   - Create SSIS project using 'Integration Service Project' in DevEnv
 
 - **Create SSIS Package for Stage Server**
   - open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
     - we have 2 database table and 2 excel file, one excel workbook has two sheets. So, we need to create 5 packages, named 'account_db', 'transaction_db', 'region_db', 'branch_doc', 'staff_doc', 'product_doc'.
-
+<br>
 	**Remember**
   <br> Data Flow - ETL Activities
 	<br> Control Flow - Non-ETL Activities
-
+<br>
 - **Data Loading to 'bank_stage' Database from 'bank' Database**
   - double click on 'account_db' SSIS Packages
   - drag 'Data Flow Task' in 'Control Flow' section
@@ -72,7 +72,7 @@
     - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
     - 'Start' the project
     - do the same for 'transaction_db' and 'region_db' package
-
+<br>
 - **Data Loading to 'bank_stage' Database from 'Excel' Document**
   - double click on 'branch_doc' SSIS Packages
   - 'Data Flow Task' in 'Control Flow' section
@@ -105,7 +105,7 @@
     - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
     - 'Start' the project
     - do the same for 'staff_doc' and 'product_doc' packages
-
+<br>
 - **SSIS Logging (To know about the status of the successful loadings)**
   - create a SSIS logging table named 'ssis_log' (where SSIS status will store)
     ```sql
@@ -136,7 +136,7 @@
     - connect 'green pipe' from 'Data Flow Task' to new 'Execute SQL Task 1'
     - 'Start' the project
     - do the same for 'transaction_db', 'branch_doc', 'staff_doc', 'product_doc' packages
-
+<br>
 - **SSIS Failure Logging (To know about the failure happened in loading)**
   - double click on desired package -> go to 'Extension' -> 'SSIS' -> 'Logging'
   - choose all 'Containers:' -> 'Add' 'SSIS log provider for SQL Server', tick the same and choose the destination server 'bank_stage' in 'Configuration' -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
@@ -144,7 +144,7 @@
   - again, choose all 'Containers:' -> 'Add' 'SSIS log provider for Windows Event Log', tick the same -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
   - Find the error logs in 'Windows Event Viewer' -> 'Windows Logs' -> 'Application'
   - Set this task for other packages also
-
+<br>
 ### SSIS for Data Warehouse Database (SQL Server Integration Service)
 - **Create Data Warehouse Database**
   ```sql
@@ -154,7 +154,7 @@
   use bank_dw
   go
   ```
-
+<br>
 - **Create Dimension and Fact table in DWH**
   - As in OLAP/DWH we need to denormalized dimension tables and extract facts, so
   - we merged account_table and product_table
@@ -164,7 +164,7 @@
   - we created a new dimension location table
   - we extracted facts from account table and created a new fact table
   - we extracted facts from transaction table and created a new fact table
-
+<br>
   ```sql
   create table dim_date
   (
@@ -248,7 +248,7 @@
   	txn_amt			money
   )
   ```
-
+<br>
 - **Create Reference Tables/Views in DWH**
   - As there have so many changes in tables in DWH so, we need to have reference table/views, from where we will get the data.
   - We will use referencee table becuase we will use more options in SSIS. By the way, below reference views also can be used for data fetching from bank_stage to bank_dw.
@@ -342,10 +342,10 @@
     (29, 'India', 'West Bengal', 'Kolkata')
     ```
   - we have 7 dimension tables and 2 fact tables. So, we need to create 7 packages, named 'DWH_Load_dim_branch', 'DWH_Load_dim_account', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' and 2 derived dimension tables ('dim_date' and 'dim_location') are already loaded.
-
+<br>
 - **Create SSIS Package for DWH Server**
   - open SSIS project -> in Solution Explorer -> create SSIS Packages -> rename the packages
-
+<br>
 - **Data Loading to 'bank_dw' Database from 'bank_stage' Database**
   - double click on 'DWH_Load_dim_account' SSIS Packages
   - drag 'Data Flow Task' in 'Control Flow' section
@@ -385,7 +385,7 @@
   - do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
   - now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
   - however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
-  
+  <br>
   - Incremental loading using 'Lookup'
   - we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
   - double click on 'DWH_Load_dim_account'
