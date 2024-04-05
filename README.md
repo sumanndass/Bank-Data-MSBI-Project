@@ -48,27 +48,27 @@
   - double click on 'Data Flow Task'
   - drag 'OLE DB Source'
     - double click on it
-    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' - Ok
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
     - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-    - put 'Server or file name' as '.' -> select database name 'bank' in 'Initial catalog' - Ok - Ok
+    - put 'Server or file name' as '.' -> select database name 'bank' in 'Initial catalog' -> Ok -> Ok
     - select 'Data access mode' as 'Table or view'
-    - choose '[dbo].[account_table]' from 'Name of the table or the view' - Ok
+    - choose '[dbo].[account_table]' from 'Name of the table or the view' -> Ok
   - drag 'OLE DB Destination'
     - connect 'blue pipe' from source to destination
     - double click on it
-    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' - Ok
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
     - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-    - put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' - Ok - Ok
+    - put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' -> Ok -> Ok
     - select 'Data access mode' as 'Table or view - fast load'
     - select 'New' in 'Name of the table or the view'
     - change table name to 'account_stage' and change data type if needed - Ok
-    - now click on 'Mappings' to check source and destination column and data type are corrected or not - Ok
-  - change names in 'Connection Managers' for better understanding - right click on it and 'Convert to Package Connection' for rest of the project
+    - now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
+  - change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
   - stage table always needs fresh data
   - so, drag 'Execute SQL Task' in 'Control Flow'
     - double click on it
     - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes - Ok
+    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
     - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
     - 'Start' the project
     - do the same for 'transaction_db' and 'region_db' package
@@ -80,28 +80,28 @@
   - drag 'Excel Source'
     - double click on it
     - in 'connection Manager' select 'New'
-    - find the 'excel' document path and choose the same and select proper 'Excel version' - Ok
+    - find the 'excel' document path and choose the same and select proper 'Excel version' -> Ok
     - select 'Data access mode' as 'Table or view'
-    - choose 'branch$' from 'Name of the Excel sheet' - Ok
+    - choose 'branch$' from 'Name of the Excel sheet' -> Ok
   - drag 'Data Conversion'
     - connect 'blue pipe' from 'Excel Source' to 'Data Conversion'
     - double click on it
     - select the 'Available Input Columns'
-    - change the 'Data Type' and 'Length' - Ok
+    - change the 'Data Type' and 'Length' -> Ok
   - drag 'OLE DB Destination'
     - connect 'blue pipe' from 'Data Conversion' to 'OLE DB Destination'
     - double click on it
     - in 'connection Manager' select 'dest.bank_stage' (which was saved earlier) in 'OLE DB Connection manager'
     - select 'Data access mode' as 'Table or view - fast load'
     - select 'New' in 'Name of the table or the view'
-    - change table name to 'branch_stage' and change data type if needed - Ok
-    - now click on 'Mappings' choose proper 'Input Column' and 'Destination Column' - Ok
-  - change names in 'Connection Managers' for better understanding - right click on it and 'Convert to Package Connection' for rest of the project
+    - change table name to 'branch_stage' and change data type if needed -> Ok
+    - now click on 'Mappings' choose proper 'Input Column' and 'Destination Column' -> Ok
+  - change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
   - stage table always needs fresh data
   - so, drag 'Execute SQL Task' in 'Control Flow'
     - double click on it
     - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
-    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes - Ok
+    - add SQL truncate command (`truncate table account_stage`) to delete all old data from stage whenever new data comes -> Ok
     - connect 'green pipe' from 'Execute SQL task' to 'Data Flow Task'
     - 'Start' the project
     - do the same for 'staff_doc' and 'product_doc' packages
@@ -124,25 +124,25 @@
     - in 'General' select 'OLE DB' in 'ConnectionType' and 'bank_stage' in 'Connection'
     - add 'SQLStatement' command (`insert into ssis_log values(?, getdate(), ?, 'Success...')`)
     - in 'Parameter Mapping' click on 'Add' and choose 'System::PackageName' in 'Variable Name' for first '?' means 0th position
-    - choose 'Varchar' as 'Data type', choose '0' in 'Parameter Name' for the 0th position '?', choose '-1' for 'Parameter Size' - Ok
-    - now click on 'Variables' and select 'Add variable' - choose 'Name' like: 'row_cnt'
+    - choose 'Varchar' as 'Data type', choose '0' in 'Parameter Name' for the 0th position '?', choose '-1' for 'Parameter Size' -> Ok
+    - now click on 'Variables' and select 'Add variable' -> choose 'Name' like: 'row_cnt'
     - now in 'Data Flow', drag 'Row Count'
     - connect 'blue pipe' from 'OLE DB Source' to 'Row Count'
     - double click on 'Row Count' and select the 'User::row_cnt' variable
     - connect 'blue pipe' from 'Row Count' to 'OLE DB Destination'
     - now in 'Control Flow', double click on newly created 'Execute SQL Task'
     - in 'Parameter Mapping' click on 'Add' and choose 'User::row_cnt' in 'Variable Name' for second '?' means 1st position
-    - choose 'Large_integer' as 'Data type', choose '1' in 'Parameter Name' for the 1st position '?', choose '-1' for 'Parameter Size' - Ok
+    - choose 'Large_integer' as 'Data type', choose '1' in 'Parameter Name' for the 1st position '?', choose '-1' for 'Parameter Size' -> Ok
     - connect 'green pipe' from 'Data Flow Task' to new 'Execute SQL Task 1'
     - 'Start' the project
     - do the same for 'transaction_db', 'branch_doc', 'staff_doc', 'product_doc' packages
 
 - **SSIS Failure Logging (To know about the failure happened in loading)**
-  - double click on desired package - go to 'Extension' - 'SSIS' - 'Logging'
-  - choose all 'Containers:' - 'Add' 'SSIS log provider for SQL Server', tick the same and choose the destination server 'bank_stage' in 'Configuration' - go to 'Details' and tick 'OnError' and 'OnTaskFailed'
+  - double click on desired package -> go to 'Extension' -> 'SSIS' -> 'Logging'
+  - choose all 'Containers:' -> 'Add' 'SSIS log provider for SQL Server', tick the same and choose the destination server 'bank_stage' in 'Configuration' -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
   - Find the error logs in system tables in the selected database by using command `sql select * from sysssislog`
-  - again, choose all 'Containers:' - add 'SSIS log provider for Windows Event Log', tick the same - go to 'Details' and tick 'OnError' and 'OnTaskFailed'
-  - Find the error logs in 'Windows Event Viewer' - 'Windows Logs' - 'Application'
+  - again, choose all 'Containers:' -> 'Add' 'SSIS log provider for Windows Event Log', tick the same -> go to 'Details' and tick 'OnError' and 'OnTaskFailed'
+  - Find the error logs in 'Windows Event Viewer' -> 'Windows Logs' -> 'Application'
   - Set this task for other packages also
 
 ### SSIS for Data Warehouse Database (SQL Server Integration Service)
@@ -351,89 +351,87 @@
   - drag 'Data Flow Task' in 'Control Flow' section
   - double click on 'Data Flow Task'
   - drag 'OLE DB Source'
-     	<br> &emsp; -> double click on it
-  	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
-  	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' -> Ok -> Ok
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view'
-  	<br> &emsp; -> choose '[dbo].[account_stage]' from 'Name of the table or the view' -> Ok
-  <br> -> drag 'Lookup'
-    	<br> &emsp; -> Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'
-      	<br> &emsp; -> connect 'blue pipe' from 'OLE DB Source' to 'Lookup'
-      	<br> &emsp; -> double click on it
-      	<br> &emsp; -> choose 'Redirect rows to no match output' in '﻿Specify how to handle rows with no matching entries' in 'General'
-	<br> &emsp; -> in 'Connection' choose 'bank_stage' in 'OLE DB Connection Manager' and choose 'product_stage' in 'Use a table or a view'
-      	<br> &emsp; -> in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Lookup Columns' and tick desired column 'prod_name'
-  	<br> &emsp; -> change 'Output Alias' as 'prod_name_lkp' -> Ok
-  <br> -> drag 'Derived Column'
-   	<br> &emsp; -> connect 'blue pipe' from 'Lookup' to 'Derived Column'
-    	<br> &emsp; -> choose 'Lookup Match Output' in 'Output' -> Ok
-       	<br> &emsp; -> double click on it
-   	<br> &emsp; -> enter 'Derived Column Name' as 'country_code_derived', choose 'Derived Column' as 'add as new column'
-     	<br> &emsp; -> enter 'Expression' as '91', choose 'Data Type' as required -> Ok
-  <br> -> drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from 'Derived Column' to 'OLE DB Destination'
-       	<br> &emsp; -> double click on it
-   	<br> &emsp; -> in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
-  	<br> &emsp; -> select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
-  	<br> &emsp; -> put 'Server or file name' as '.' -> select database name 'bank_dw' in 'Initial catalog' -> Ok -> Ok
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
-  	<br> &emsp; -> select 'New' in 'Name of the table or the view'
-    	<br> &emsp; -> change table name to 'dim_account' and change data type if needed -> Ok
-      	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
-  <br> -> change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
-  <br> -> do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
-  <br> -> now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
-  <br> -> however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
+    - double click on it
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> againg select 'New' -> Ok
+    - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
+    - put 'Server or file name' as '.' -> select database name 'bank_stage' in 'Initial catalog' -> Ok -> Ok
+    - select 'Data access mode' as 'Table or view'
+    - choose '[dbo].[account_stage]' from 'Name of the table or the view' -> Ok
+  - drag 'Lookup'
+    - Look up on 'product_stage' table based on 'prod_id' and get 'prod_name', reference 'ETL_Mapping _Doc.xlsx'
+    - connect 'blue pipe' from 'OLE DB Source' to 'Lookup'
+    - double click on it
+    - choose 'Redirect rows to no match output' in '﻿Specify how to handle rows with no matching entries' in 'General'
+    - in 'Connection' choose 'bank_stage' in 'OLE DB Connection Manager' and choose 'product_stage' in 'Use a table or a view'
+    - in 'Columns' drag 'prod_id' of 'Available Input Columns' on 'prod_id' of 'Available Lookup Columns' and tick desired column 'prod_name'
+    - change 'Output Alias' as 'prod_name_lkp' -> Ok
+  - drag 'Derived Column'
+    - connect 'blue pipe' from 'Lookup' to 'Derived Column'
+    - choose 'Lookup Match Output' in 'Output' -> Ok
+    - double click on it
+    - enter 'Derived Column Name' as 'country_code_derived', choose 'Derived Column' as 'add as new column'
+    - enter 'Expression' as '91', choose 'Data Type' as required -> Ok
+  - drag 'OLE DB Destination'
+    - connect 'blue pipe' from 'Derived Column' to 'OLE DB Destination'
+    - double click on it
+    - in 'connection Manager' select 'New' in 'OLE DB Connection manager' -> again select 'New' -> Ok
+    - select 'Provider' as 'Native OLE DB\Microsoft OLE DB Driver for SQL Server'
+    - put 'Server or file name' as '.' -> select database name 'bank_dw' in 'Initial catalog' -> Ok -> Ok
+    - select 'Data access mode' as 'Table or view - fast load'
+    - select 'New' in 'Name of the table or the view'
+    - change table name to 'dim_account' and change data type if needed -> Ok
+    - now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
+  - change names in 'Connection Managers' for better understanding -> right click on it and 'Convert to Package Connection' for rest of the project
+  - do the same for 'DWH_Load_dim_branch', 'DWH_Load_dim_transsaction', 'DWH_Load_fact_account', 'DWH_Load_fact_transaction' packages taking reference from 'ETL_Mapping_Doc.xlsx'
+  - now, if any update available in stage database we will load the same in DWH dimension tables only not in the fact tables, but one issue will occur i.e., again old data will load in dimension tables with new ones. So, we will use Slowly Changing Dimension (SCD) to negate the old data from copying with.
+  - however, for incremental/delta loading we can use SCD, Lookup, Stored Procedure, Set Operator, Merge Command
   
-  <br> -> Incremental loading using 'Lookup'
-  <br> -> we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
-  <br> -> double click on 'DWH_Load_dim_account'
-  <br> -> drag 'Lookup' just before 'OLE DB Destination' i.e., data loading
-      	<br> &emsp; -> connect 'blue pipe' from 'Derived Column' to 'Lookup1'
-      	<br> &emsp; -> double click on it
-      	<br> &emsp; -> choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
-	<br> &emsp; -> in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
-      	<br> &emsp; -> in 'Columns' drag 'acc_id' of 'Available Input Columns' on 'acc_id' of 'Available Lookup Columns' and tick desired column 'prod_name' -> Ok
-      	<br> &emsp; -> now, drag 'OLE DB Destination'
-   	<br> &emsp; -> connect 'blue pipe' from Lookup1' to 'OLE DB Destination'
-   	<br> &emsp; -> choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
-       	<br> &emsp; -> double click on 'OLE DB Destination'
-   	<br> &emsp; -> in 'connection Manager' select 'bank_dw' in 'OLE DB Connection manager'
-  	<br> &emsp; -> select 'Data access mode' as 'Table or view - fast load'
-  	<br> &emsp; -> select 'dim_account' in 'Name of the table or the view'
-      	<br> &emsp; -> now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
-      	<br> &emsp; -> now, drag 'OLE DB Command'
-   	<br> &emsp; -> connect 'blue pipe' from Lookup1' to 'OLE DB Command'
-   	<br> &emsp; -> choose 'Lookup Match Output' in 'Output' for updating data -> Ok
-       	<br> &emsp; -> double click on 'OLE DB Command'
-   	<br> &emsp; -> in 'Connection Manager' select 'bank_dw' in 'Connection Managers'
-   	<br> &emsp; -> in 'SqlCommand' enter `update dim_account
-  set cust_name = ?,
-	cust_add = ?,
-	cust_state = ?,
-	cust_zipcode = ?,
-	prod_name = ?,
-	status = ?
-where acc_id = ?` in 'Component Properties'
-  	<br> &emsp; -> in 'Column Mappings' map 'Input Column' and 'Destination Column' -> Ok
-  	<br> &emsp; -> but the problem with 'OLE DB Command' is that it does not verify whether there have any changes in the matched data or not, it just takes all the data and updating or over writing the same. So, to identify any change in source data we need to use another 'Lookup' before 'OLE DB Command' and identify the actual data where updation is required.
-  	<br> &emsp; -> drag 'Lookup' just before 'OLE DB Command'
-  	<br> &emsp; -> connect 'blue pipe' from 'Lookup 2' to 'OLE DB Command'
-   	<br> &emsp; -> choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
-      	<br> &emsp; -> double click on 'Lookup 2'
-      	<br> &emsp; -> choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
-	<br> &emsp; -> in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
-      	<br> &emsp; -> in 'Columns' connect 'acc_id' to 'acc_id', 'cust_name' to 'cust_name', 'cust_add' to 'cust_add', 'cust_state' to 'cust_state', 'cust_zipcode' to 'cust_zipcode', 'prod_name_lkp' to 'prod_name', 'status' to 'status' -> Ok
-  <br> -> Now, we cannot load all the tables at once, we need to load tables where PKs are present then we can load table where FKs are present.
-      	<br> &emsp; -> now, create one more package named 'DWL_load_tables.dtsx'
-      	<br> &emsp; -> double click on it
-      	<br> &emsp; -> drag 'Execute Package Task' and double click on it
-      	<br> &emsp; -> in 'Package' choose the first package in 'PackageNameFromProjectReference' -> Ok
-      	<br> &emsp; -> again drag another 'Execute Package Task 1'
-      	<br> &emsp; -> connect 'green pipe' from ' Execute Package Task ' to ' Execute Package Task 1'
-      	<br> &emsp; -> double click on it and in 'Package' choose the second package in 'PackageNameFromProjectReference' -> Ok
-      	<br> &emsp; -> do the same thing till last package
+  - Incremental loading using 'Lookup'
+  - we 'Lookup' on destination table and for unmatched data we will insert and for matched data we will update the same in destination table
+  - double click on 'DWH_Load_dim_account'
+  - drag 'Lookup' just before 'OLE DB Destination' i.e., data loading
+    - connect 'blue pipe' from 'Derived Column' to 'Lookup1'
+    - double click on it
+    - choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
+    - in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
+    - in 'Columns' drag 'acc_id' of 'Available Input Columns' on 'acc_id' of 'Available Lookup Columns' and tick desired column 'prod_name' -> Ok
+    - now, drag 'OLE DB Destination'
+    - connect 'blue pipe' from Lookup1' to 'OLE DB Destination'
+    - choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
+    - double click on 'OLE DB Destination'
+    - in 'connection Manager' select 'bank_dw' in 'OLE DB Connection manager'
+    - select 'Data access mode' as 'Table or view - fast load'
+    - select 'dim_account' in 'Name of the table or the view'
+    - now click on 'Mappings' to check source and destination column and data type are corrected or not -> Ok
+    - now, drag 'OLE DB Command'
+    - connect 'blue pipe' from Lookup1' to 'OLE DB Command'
+    - choose 'Lookup Match Output' in 'Output' for updating data -> Ok
+    - double click on 'OLE DB Command'
+    - in 'Connection Manager' select 'bank_dw' in 'Connection Managers'
+    - in 'SqlCommand' enter
+      ```sql
+      update dim_account
+      set cust_name = ?, cust_add = ?, cust_state = ?, cust_zipcode = ?, prod_name = ?,	status = ?
+      where acc_id = ?
+      ``` in 'Component Properties'
+    - in 'Column Mappings' map 'Input Column' and 'Destination Column' -> Ok
+  - But the problem with 'OLE DB Command' is that it does not verify whether there have any changes in the matched data or not, it just takes all the data and updating or over writing the same. So, to identify any change in source data we need to use another 'Lookup' before 'OLE DB Command' and identify the actual data where updation is required.
+    - drag 'Lookup' just before 'OLE DB Command'
+    - connect 'blue pipe' from 'Lookup 2' to 'OLE DB Command'
+    - choose 'Lookup No Match Output' in 'Output' for inserting data -> Ok
+    - double click on 'Lookup 2'
+    - choose 'Redirect rows to no match output' in 'Specify how to handle rows with no matching entries' in 'General'
+    - in 'Connection' choose 'bank_dw' in 'OLE DB Connection Manager' and choose 'dim_account' in 'Use a table or a view'
+    - in 'Columns' connect 'acc_id' to 'acc_id', 'cust_name' to 'cust_name', 'cust_add' to 'cust_add', 'cust_state' to 'cust_state', 'cust_zipcode' to 'cust_zipcode', 'prod_name_lkp' to 'prod_name', 'status' to 'status' -> Ok
+  - Now, we cannot load all the tables at once, we need to load tables where PKs are present then we can load table where FKs are present.
+    - now, create one more package named 'DWL_load_tables.dtsx'
+    - double click on it
+    - drag 'Execute Package Task' and double click on it
+    - in 'Package' choose the first package in 'PackageNameFromProjectReference' -> Ok
+    - again drag another 'Execute Package Task 1'
+    - connect 'green pipe' from ' Execute Package Task ' to ' Execute Package Task 1'
+    - double click on it and in 'Package' choose the second package in 'PackageNameFromProjectReference' -> Ok
+    - do the same thing till last package
   
   <br> -> SSIS Performance
   <br> -> Now, due to 'OLE DB Command' in 'Data Flow' the task becomes very slow because it performs row by row operation, to overcome this we will update the data in 'Control Flow' using 'Execute SQL Task' because it performs batch operation.
